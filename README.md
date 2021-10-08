@@ -1,6 +1,6 @@
 <h1 align="center">CMD</h1></br>
 <p align="center">
-  <!--- <a href="https://github.com/zurichat/zc_android/actions/workflows/android_build.yml"><img alt="License" src="https://github.com/zurichat/zc_android/actions/workflows/android_build.yml/badge.svg"/></a>--->
+  <!--- <a href="https://github.com/zurichat/zc_android/actions/workflows/android_build.yml"><img alt="License" src="https://github.com/thecmdteam/cmd_android/actions/workflows/android_build.yml/badge.svg"/></a>--->
   <a href="https://android-arsenal.com/api?level=21"><img alt="API" src="https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat"/></a>
 </p>
 
@@ -11,7 +11,7 @@ This is The Android repository for CMD project.
 - Fork the project.
 - Clone your own forked repository, run `git clone "https://github.com/[your_github_username]/cmd_app_android.git"`
 
-Add remote upstream using the command `git remote add upstream "https://github.com/zurichat/cmd_app_android.git"`
+Add remote upstream using the command `git remote add upstream "https://github.com/thecmdteam/cmd_app_android.git"`
 
 - run: `git fetch upstream` - You must fetch from develop before or after checkout<br/>
 - run: `git merge upstream/develop` - Merge updates from upstream<br/>
