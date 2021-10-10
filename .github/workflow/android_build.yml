@@ -1,17 +1,51 @@
-name: Label issues
-on:
-  issues:
-    types:
-      - reopened
-      - opened
+name: Android Build
+
+on: [ push, pull_request ]
+
 jobs:
-  label_issues:
+  build:
+
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
+
     steps:
-      - name: Label issues
-        uses: andymckay/labeler@5c59dabdfd4dd5bd9c6e6d255b01b9d764af4414
+      - uses: actions/checkout@v2
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v1
         with:
-          add-labels: "pending review, approved"
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          java-version: 1.11
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Fix Android SDK
+        run: sudo chmod -R a+w /usr/local/lib/android/sdk
+
+      - name: Run Tests
+        run: ./gradlew test
+
+      - name: Build Project
+        run: ./gradlew assemble
+
+  apk:
+    name: Generate APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: set up JDK 1.11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+      - name: Fix Android SDK
+        run: sudo chmod -R a+w /usr/local/lib/android/sdk
+      - name: Build debug APK
+        run: bash ./gradlew assembleDebug --stacktrace
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: app
+          path: app/build/outputs/apk/debug/app-debug.apk
