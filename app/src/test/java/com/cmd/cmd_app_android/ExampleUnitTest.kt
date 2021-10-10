@@ -1,4 +1,4 @@
-package com.solid.cmd_app_android
+package com.cmd.cmd_app_android
 
 import org.junit.Test
 

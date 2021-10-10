@@ -1,13 +1,14 @@
-package com.solid.cmd_app_android
+package com.cmd.cmd_app_android.view.activities
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.solid.cmd_app_android.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import thecmdteam.cmd_app_android.R
+import thecmdteam.cmd_app_android.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 

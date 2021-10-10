@@ -1,4 +1,4 @@
-package com.solid.cmd_app_android.ui.notifications
+package com.cmd.cmd_app_android.view.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.solid.cmd_app_android.R
-import com.solid.cmd_app_android.databinding.FragmentNotificationsBinding
+import com.cmd.cmd_app_android.viewmodel.NotificationsViewModel
+import thecmdteam.cmd_app_android.databinding.FragmentNotificationsBinding
 
 class NotificationsFragment : Fragment() {
 
