@@ -1,0 +1,21 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/brand_black"
+    tools:context="com.cmd.cmd_app_android.view.fragments.SplashFragment">
+
+
+    <ImageView
+        android:id="@+id/cmd_logo"
+        android:layout_width="230dp"
+        android:layout_height="59dp"
+        android:src="@drawable/ic_cmd"
+        android:transitionName="image_cmd_big"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
