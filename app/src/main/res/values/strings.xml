@@ -20,4 +20,14 @@
     <string name="phone_number">Phone Number</string>
     <string name="last_name">Lastname</string>
     <string name="already_have_an_account">Already have an account?</string>
+    <string name="email_verification">Email Verification</string>
+    <string name="email_verification_text">an otp was send to your email for foran otp was send to your email for for an otp was send to your email for for an otp was send to your email for for</string>
+    <string name="change_email">Change Email?</string>
+    <string name="verify">Verify</string>
+    <string name="otp">OTP</string>
+    <string name="create_password">Create Password</string>
+    <string name="new_password">New Password</string>
+    <string name="retype_new_password">Retype New Password</string>
+    <string name="continue_text">Continue</string>
+    <string name="resend">Resend</string>
 </resources>

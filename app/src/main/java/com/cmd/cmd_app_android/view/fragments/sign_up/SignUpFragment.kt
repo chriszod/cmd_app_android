@@ -1,22 +1,29 @@
 package com.cmd.cmd_app_android.view.fragments.sign_up
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.cmd.cmd_app_android.view.utils.handleError
 import com.cmd.cmd_app_android.view.utils.onChange
 import com.cmd.cmd_app_android.viewmodel.SignupViewModel
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
 import com.google.android.material.snackbar.Snackbar
-import com.solid.cmd_app_android.data.models.defaultUser
+import com.cmd.cmd_app_android.data.models.defaultUser
+import com.cmd.cmd_app_android.view.utils.NO_INTERNET_CONNECTION
+import com.cmd.cmd_app_android.view.utils.makeAlertDialog
+import com.cmd.cmd_app_android.viewmodel.SignupUiEvents
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import thecmdteam.cmd_app_android.R
 import thecmdteam.cmd_app_android.databinding.FragmentSignupBinding
 
@@ -31,6 +38,19 @@ class SignUpFragment: Fragment(R.layout.fragment_signup) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSignupBinding.bind(view)
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.uiEvents.collect {
+                when(it){
+                    SignupUiEvents.NoInternetConnection -> {
+                        makeAlertDialog(requireContext(), NO_INTERNET_CONNECTION).setTitle("Network").create().show()
+                    }
+                    is SignupUiEvents.Error -> {
+                        makeAlertDialog(requireContext(), it.error).setTitle("Error").create().show()
+                    }
+                }
+            }
+        }
 
         binding.firstNameTextField.onChange {
             viewModel.execute(SignupEvents.FirstNameTextChange(it))
@@ -62,11 +82,12 @@ class SignUpFragment: Fragment(R.layout.fragment_signup) {
                     binding.loading(requireContext())
                 }
                 if(!it.loading && it.error.isNotBlank()) {
-                    binding.error(requireContext(), view, it.error)
+                    binding.error(requireContext())
                 }
                 if (it.user != defaultUser && !it.loading) {
-                    Log.d("TAG", "onViewCreated: ${it.user}")
-                    Snackbar.make(view, it.user.firstName, LENGTH_LONG).show()
+                    binding.success(requireContext())
+                    val action = SignUpFragmentDirections.actionSignUpFragmentToOtpFragment(it.user.otp)
+                    findNavController().navigate(action)
                 }
                 binding.apply {
                     emailErrorText.handleError(it.email.errorMessage, it.email.valid)
@@ -96,7 +117,7 @@ fun FragmentSignupBinding.loading(context: Context) {
 
 }
 
-fun FragmentSignupBinding.success(context: Context, view: View) {
+fun FragmentSignupBinding.success(context: Context) {
     this.apply {
         signInText.isClickable = true
         signupButtonText.visibility = View.VISIBLE
@@ -108,7 +129,7 @@ fun FragmentSignupBinding.success(context: Context, view: View) {
 
 }
 
-fun FragmentSignupBinding.error(context: Context, view: View, error: String) {
+fun FragmentSignupBinding.error(context: Context) {
     this.apply {
         signInText.isClickable = true
         signupButtonText.visibility = View.VISIBLE
@@ -116,6 +137,5 @@ fun FragmentSignupBinding.error(context: Context, view: View, error: String) {
         buttonSignup.isClickable = true
         buttonSignup.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
     }
-    Snackbar.make(view, error, LENGTH_LONG).show()
 }
 

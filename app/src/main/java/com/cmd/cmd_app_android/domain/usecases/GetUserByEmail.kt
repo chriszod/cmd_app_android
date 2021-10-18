@@ -1,4 +1,4 @@
-package com.cmd.cmd_app_android.domain.usecase
+package com.cmd.cmd_app_android.domain.usecases
 
 import com.cmd.cmd_app_android.data.repository.UserRepository
 

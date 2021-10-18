@@ -1,21 +1,24 @@
 package com.cmd.cmd_app_android.view.fragments.sign_in
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.cmd.cmd_app_android.view.utils.handleError
-import com.cmd.cmd_app_android.view.utils.onChange
 import com.cmd.cmd_app_android.viewmodel.SignInUiEvents
 import com.cmd.cmd_app_android.viewmodel.SignInViewModel
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
 import com.google.android.material.snackbar.Snackbar
-import com.solid.cmd_app_android.data.models.defaultUser
+import com.cmd.cmd_app_android.data.models.defaultUser
+import com.cmd.cmd_app_android.view.activities.MainActivity
+import com.cmd.cmd_app_android.view.utils.*
+import com.cmd.cmd_app_android.viewmodel.SignupUiEvents
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -39,11 +42,11 @@ class SignInFragment: Fragment(R.layout.fragment_signin) {
                     binding.loading(requireContext())
                 }
                 if(!it.loading && it.error.isNotBlank()) {
-                    binding.error(requireContext(), view, it.error)
+                    binding.error(requireContext())
                 }
                 if (it.user != defaultUser && !it.loading) {
-                    Log.d("TAG", "onViewCreated: ${it.user}")
-                    Snackbar.make(view, it.user.firstName, LENGTH_LONG).show()
+                    binding.success(requireContext())
+                    navigateActivity(requireContext(), MainActivity())
                 }
                 binding.apply {
                     emailErrorText.handleError(it.emailState.errorMessage, it.emailState.valid)
@@ -58,7 +61,6 @@ class SignInFragment: Fragment(R.layout.fragment_signin) {
 
         binding.passwordTextField.onChange {
             viewModel.execute(SignInEvents.PasswordTextChange(it))
-            Log.d("TAG", "onViewCreated: $it")
         }
 
         binding.buttonSignin.setOnClickListener {
@@ -73,7 +75,10 @@ class SignInFragment: Fragment(R.layout.fragment_signin) {
             viewModel.uiState.collect {
                 when(it) {
                     is SignInUiEvents.NoInternetConnection -> {
-                        Snackbar.make(view, "No Internet Connection", LENGTH_LONG).show()
+                        makeAlertDialog(requireContext(), NO_INTERNET_CONNECTION).setTitle("Internet Error").create().show()
+                    }
+                    is SignInUiEvents.Error -> {
+                        makeAlertDialog(requireContext(), it.error).setTitle("Error").create().show()
                     }
                 }
             }
@@ -107,12 +112,11 @@ fun FragmentSigninBinding.success(context: Context) {
 
 }
 
-fun FragmentSigninBinding.error(context: Context, view: View, error: String) {
+fun FragmentSigninBinding.error(context: Context) {
     this.apply {
         signupButtonText.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
         buttonSignin.isClickable = true
         buttonSignin.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
     }
-    Snackbar.make(view, error, LENGTH_LONG).show()
 }

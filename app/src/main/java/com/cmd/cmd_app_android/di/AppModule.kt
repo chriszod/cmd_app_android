@@ -1,13 +1,16 @@
-package com.solid.cmd_app_android.di
+package com.cmd.cmd_app_android.di
 
-import com.cmd.cmd_app_android.domain.usecase.*
-import com.solid.cmd_app_android.data.api.UserApi
+import android.content.Context
+import com.cmd.cmd_app_android.data.api.UserApi
 import com.cmd.cmd_app_android.data.repository.UserRepository
-import com.solid.cmd_app_android.data.utils.BASE_URL
-import com.solid.cmd_app_android.data.repository.UserRepositoryImpl
+import com.cmd.cmd_app_android.data.utils.BASE_URL
+import com.cmd.cmd_app_android.domain.repository.DatastoreRepository
+import com.cmd.cmd_app_android.domain.usecases.*
+import com.cmd.cmd_app_android.data.repository.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -27,7 +30,9 @@ object AppModule {
     @Singleton
     fun provideUserApi(): UserApi {
         val client = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
             .build()
 
         return Retrofit.Builder()
@@ -46,13 +51,27 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUseCases(repository: UserRepository): UserUseCases {
+    fun provideDatastore(@ApplicationContext context: Context): DatastoreRepository {
+        return DatastoreRepository(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUseCases(
+        repository: UserRepository,
+        datastoreRepository: DatastoreRepository
+    ): UserUseCases {
         return UserUseCases(
             createUser = CreateUser(repository),
             updateUser = UpdateUser(repository),
             getUserById = GetUserById(repository),
             getUsers = GetUsers(repository),
-            getUserByEmail = GetUserByEmail(repository)
+            getUserByEmail = GetUserByEmail(repository),
+            loginUser = LoginUser(repository),
+            changePassword = ChangePassword(repository),
+            verifyEmail = VerifyEmail(repository),
+            saveUserToDatastore = SaveUserToDatastore(datastoreRepository),
+            getUserInfoFromDatastore = GetUserInfoFromDatastore(datastoreRepository)
         )
     }
 }

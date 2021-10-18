@@ -1,4 +1,4 @@
-package com.solid.cmd_app_android.common
+package com.cmd.cmd_app_android.common
 
 sealed class Resource<T>(
     val data: T? = null,

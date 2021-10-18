@@ -1,13 +1,14 @@
-package com.solid.cmd_app_android.data.api
+package com.cmd.cmd_app_android.data.api
 
-import com.solid.cmd_app_android.data.models.UserDTO
+import com.cmd.cmd_app_android.data.models.UserDTO
+import com.cmd.cmd_app_android.data.models.UserRequestObject
 import retrofit2.Response
 import retrofit2.http.*
 
 interface UserApi {
 
     @POST("users")
-    suspend fun createUser(@Body user: UserDTO): Response<UserDTO>
+    suspend fun createUser(@Body user: UserRequestObject): Response<UserDTO>
 
     @GET("users")
     suspend fun getUsers(): Response<List<UserDTO>>
@@ -23,4 +24,13 @@ interface UserApi {
 
     @GET("users/byEmail/{email}")
     suspend fun getUserByEmail(@Path("email") email: String): Response<UserDTO>
+
+    @POST("users/loginByEmail/{email}")
+    suspend fun loginUser(@Path("email") email: String, @Body password: String): Response<Boolean>
+
+    @POST("users/setPassword/{userId}")
+    suspend fun changePassword(@Path("userId") userId: String, @Body newPassword: String): Response<UserDTO>
+
+    @POST("users/verifyEmail")
+    suspend fun verifyEmail(@Body email: String): Response<String>
 }

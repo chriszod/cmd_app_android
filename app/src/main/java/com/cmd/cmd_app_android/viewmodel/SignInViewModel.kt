@@ -4,13 +4,10 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.cmd.cmd_app_android.view.fragments.sign_in.SignInEvents
 import com.cmd.cmd_app_android.view.fragments.sign_in.SignInState
-import com.cmd.cmd_app_android.view.utils.checkConnectivity
-import com.cmd.cmd_app_android.view.utils.validateEmail
-import com.cmd.cmd_app_android.view.utils.validatePassword
-import com.solid.cmd_app_android.common.Resource
-import com.solid.cmd_app_android.data.models.defaultUser
-import com.cmd.cmd_app_android.domain.usecase.UserUseCases
-import com.cmd.cmd_app_android.view.utils.validateSignIn
+import com.cmd.cmd_app_android.common.Resource
+import com.cmd.cmd_app_android.data.models.defaultUser
+import com.cmd.cmd_app_android.domain.usecases.UserUseCases
+import com.cmd.cmd_app_android.view.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,38 +61,31 @@ class SignInViewModel @Inject constructor(
 
     private suspend fun signIn() {
         if (getApplication<Application>().checkConnectivity()) {
-            val validate = validateSignIn(signInState.value.emailState.value, signInState.value.passwordState.value)
-            if(validate.error) {
-                _signInState.value = signInState.value.copy(
-                    error = validate.message,
-                    loading = false
-                )
-            } else {
-                useCases.getUserByEmail(signInState.value.emailState.value).collectLatest {
+            val error = validateSignIn()
+            if(!error) {
+                useCases.loginUser(
+                    signInState.value.emailState.value,
+                    signInState.value.passwordState.value
+                ).collectLatest {
                     when (it) {
                         is Resource.Loading -> {
                             _signInState.value = signInState.value.copy(loading = true)
                         }
                         is Resource.Error -> {
+                            val message = it.error ?: "Unknown Error Occurred, Please try again later"
                             _signInState.value = signInState.value.copy(
                                 loading = false,
-                                error = it.error ?: "Unknown Error Occurred"
+                                error = message
                             )
+                            _uiState.send(SignInUiEvents.Error(message))
                         }
                         is Resource.Success -> {
                             val user = it.data ?: defaultUser
-                            if (user.password == signInState.value.passwordState.value) {
-                                _signInState.value = signInState.value.copy(
-                                    loading = false,
-                                    user = it.data ?: defaultUser
-                                )
-                            }
-                            else {
-                                _signInState.value = signInState.value.copy(
-                                    loading = false,
-                                    error = "Wrong password or Email"
-                                )
-                            }
+                            _signInState.value = signInState.value.copy(
+                                loading = false,
+                                user = user
+                            )
+                            useCases.saveUserToDatastore(user.id, user.email, user.isEmailVerified)
                         }
                     }
                 }
@@ -104,8 +94,26 @@ class SignInViewModel @Inject constructor(
             _uiState.send(SignInUiEvents.NoInternetConnection)
         }
     }
+
+    private fun validateSignIn(): Boolean {
+        val state = signInState.value
+        val email = validateEmail(state.emailState.value)
+        val password = validatePassword(state.passwordState.value)
+        _signInState.value = state.copy(
+            emailState = state.emailState.copy(
+                valid = !email.error,
+                errorMessage = email.message
+            ),
+            passwordState = state.passwordState.copy(
+                valid = !password.error,
+                errorMessage = password.message
+            )
+        )
+        return email.error || password.error
+    }
 }
 
 sealed class SignInUiEvents {
     object NoInternetConnection : SignInUiEvents()
+    data class Error(val error: String): SignInUiEvents()
 }

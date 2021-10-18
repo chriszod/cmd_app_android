@@ -5,11 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmd.cmd_app_android.view.fragments.sign_up.SignupEvents
 import com.cmd.cmd_app_android.view.fragments.sign_up.SignupState
-import com.solid.cmd_app_android.common.Resource
-import com.solid.cmd_app_android.data.models.UserDTO
-import com.solid.cmd_app_android.data.models.defaultUser
-import com.cmd.cmd_app_android.domain.usecase.UserUseCases
-import com.cmd.cmd_app_android.ui.utils.*
+import com.cmd.cmd_app_android.common.Resource
+import com.cmd.cmd_app_android.data.models.defaultUser
+import com.cmd.cmd_app_android.domain.usecases.UserUseCases
 import com.cmd.cmd_app_android.view.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -30,10 +28,13 @@ class SignupViewModel @Inject constructor(
     val signupState: StateFlow<SignupState> get() = _signupState
 
     private val _uiEvents: Channel<SignupUiEvents> = Channel()
-    val uiEvents = _uiEvents.receiveAsFlow()
+    val uiEvents get() = _uiEvents.receiveAsFlow()
 
     fun execute(event: SignupEvents) {
         viewModelScope.launch {
+            _signupState.value = signupState.value.copy(
+                change = !signupState.value.change
+            )
             when(event) {
                 is SignupEvents.EmailTextChange -> {
                     val validate = validateEmail(event.value)
@@ -83,19 +84,9 @@ class SignupViewModel @Inject constructor(
     }
     private suspend fun signup() {
         if (getApplication<Application>().checkConnectivity()) {
-            val validate = validateSignup(
-                signupState.value.firstName.value,
-                signupState.value.lastName.value,
-                signupState.value.phone.value,
-                signupState.value.email.value,
-            )
-            if(validate.error) {
-                _signupState.value = signupState.value.copy(
-                    error = validate.message,
-                    loading = false
-                )
-            } else {
-                val user = UserDTO(
+            val error = validateSignup()
+            if(!error) {
+                val user = defaultUser.copy(
                     email = signupState.value.email.value,
                     firstName = signupState.value.firstName.value,
                     lastName = signupState.value.lastName.value,
@@ -107,16 +98,20 @@ class SignupViewModel @Inject constructor(
                             _signupState.value = signupState.value.copy(loading = true)
                         }
                         is Resource.Error -> {
+                            val message = it.error ?: "Unknown Error Occurred, Please try again later"
                             _signupState.value = signupState.value.copy(
                                 loading = false,
-                                error = it.error ?: "Unknown Error Occurred"
+                                error = message
                             )
+                            _uiEvents.send(SignupUiEvents.Error(message))
                         }
                         is Resource.Success -> {
+                            val userDto = it.data ?: defaultUser
                             _signupState.value = signupState.value.copy(
                                 loading = false,
-                                user = it.data ?: defaultUser
+                                user = userDto
                             )
+                            useCases.saveUserToDatastore(userDto.id, userDto.email, userDto.isEmailVerified)
                         }
                     }
                 }
@@ -125,8 +120,36 @@ class SignupViewModel @Inject constructor(
             _uiEvents.send(SignupUiEvents.NoInternetConnection)
         }
     }
+
+    private fun validateSignup(): Boolean {
+        val state = signupState.value
+        val email = validateEmail(state.email.value)
+        val phone = validatePhone(state.phone.value)
+        val firstName = validateName(state.firstName.value)
+        val lastName = validateName(state.lastName.value)
+        _signupState.value = state.copy(
+            email = state.email.copy(
+                valid = !email.error,
+                errorMessage = email.message
+            ),
+            phone = state.phone.copy(
+                valid = !phone.error,
+                errorMessage = phone.message
+            ),
+            firstName = state.firstName.copy(
+                valid = !firstName.error,
+                errorMessage = firstName.message
+            ),
+            lastName = state.lastName.copy(
+                valid = !lastName.error,
+                errorMessage = lastName.message
+            )
+        )
+        return email.error || phone.error || firstName.error || lastName.error
+    }
 }
 
 sealed class SignupUiEvents {
     object NoInternetConnection : SignupUiEvents()
+    data class Error(val error: String): SignupUiEvents()
 }

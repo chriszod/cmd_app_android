@@ -1,4 +1,4 @@
-package com.solid.cmd_app_android.data.models
+package com.cmd.cmd_app_android.data.models
 
 import com.google.gson.annotations.SerializedName
 
@@ -6,11 +6,26 @@ data class UserDTO(
     val email: String,
     @SerializedName("fname")
     val firstName: String,
-    val id: String? = null,
+    val id: String,
+    val imageUrl: String,
+    val isEmailVerified: Boolean,
     @SerializedName("lname")
     val lastName: String,
-    val password: String? = null,
-    val phone: String
+    val otp: String,
+    val phone: String,
+    val techTrack: String
 )
 
-val defaultUser = UserDTO("", "", "", "", "", "")
+fun UserDTO.userDTOtoRequestObject(): UserRequestObject {
+    return UserRequestObject(
+        email = this.email,
+        firstName = this.firstName,
+        imageUrl = this.imageUrl,
+        isEmailVerified = this.isEmailVerified,
+        lastName = lastName,
+        phone = phone,
+        techTrack = techTrack
+    )
+}
+
+val defaultUser = UserDTO("", "", "", "", false, "", "", "","",)

@@ -21,11 +21,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/text_sigin_header"
+        android:id="@+id/text_verify_header"
         app:layout_constraintTop_toBottomOf="@id/cmd_logo"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="50dp"
-        android:text="@string/sign_in"
+        android:text="@string/email_verification"
         android:fontFamily="@font/poppins_bold"
         android:textSize="30sp"
         android:textColor="@color/text_white"/>
@@ -33,10 +33,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/text_sigin_header"
+        app:layout_constraintTop_toBottomOf="@id/text_verify_header"
         app:layout_constraintStart_toStartOf="parent"
         android:orientation="vertical"
-        android:id="@+id/email_section"
+        android:id="@+id/otp_section"
         android:layout_marginTop="17dp">
 
         <TextView
@@ -44,81 +44,95 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_white"
             android:textSize="18sp"
-            android:text="@string/email"
+            android:text="@string/otp"
             android:fontFamily="@font/poppins_light"
-            android:id="@+id/email_label"/>
+            android:id="@+id/otp_label"/>
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_text_field"
             android:padding="10dp"
-            android:inputType="textEmailAddress"
+            android:inputType="number"
             android:textColor="@color/text_white"
-            android:id="@+id/email_text_field"
+            android:id="@+id/otp_text_field"
             android:hint="@null"/>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/email_error_text"
-            android:textColor="@color/error_red"
-            tools:text="Name is not valid"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/poppins_medium"/>
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp"
+            android:id="@+id/otp_error_layout"
+            android:visibility="gone"
+            android:background="@drawable/background_auth_button_loading">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/otp_error"
+                android:textColor="@color/error_red"
+                tools:text="Name is not valid"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins_medium"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/bottom_section"
+                android:background="@drawable/background_auth_button"
+                android:paddingVertical="6dp"
+                android:paddingHorizontal="19dp"
+                android:id="@+id/resend_button">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/resend"
+                    android:textColor="@color/text_white"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:textSize="16sp"
+                    android:visibility="visible"
+                    android:id="@+id/resend_button_text"
+                    android:layout_centerInParent="true"/>
+
+                <ProgressBar
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:indeterminate="true"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"
+                    android:indeterminateTintMode="src_atop"
+                    android:indeterminateTint="@color/brand_yellow"
+                    android:id="@+id/resend_progress"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/email_section"
-        app:layout_constraintStart_toStartOf="parent"
-        android:orientation="vertical"
-        android:id="@+id/password_section"
-        android:layout_marginTop="5dp">
+        app:layout_constraintTop_toBottomOf="@id/otp_section"
+        android:id="@+id/verification_text"
+        android:layout_marginTop="15dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_white"
-            android:textSize="18sp"
-            android:text="@string/password"
+            android:id="@+id/email_verification_text"
+            android:background="@drawable/background_auth_button_loading"
             android:fontFamily="@font/poppins_light"
-            android:id="@+id/password_label"/>
+            android:textSize="15sp"
+            android:textColor="@color/text_white"
+            android:text="@string/email_verification_text"
+            android:padding="8dp"/>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_text_field"
-            android:padding="10dp"
-            android:textColor="@color/brand_black"
-            android:inputType="textPassword"
-            android:id="@+id/password_text_field"
-            android:hint="@null"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/password_error_text"
-            android:textColor="@color/error_red"
-            tools:text="Name is not valid"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/poppins_medium"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_white"
-        android:textSize="16sp"
-        android:text="@string/forgot_password"
-        android:fontFamily="@font/poppins_light"
-        android:id="@+id/text_forgot_password"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@id/password_section"/>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -133,21 +147,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_white"
-            android:textSize="16sp"
-            android:text="@string/don_t_have_an_account"
-            android:fontFamily="@font/poppins_light"
-            android:id="@+id/dont_have_account"
-            android:layout_marginEnd="5dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:textColor="@color/brand_yellow"
             android:textSize="16sp"
-            android:text="@string/sign_up"
+            android:text="@string/change_email"
             android:fontFamily="@font/poppins_light"
-            android:id="@+id/sign_up_text" />
+            android:id="@+id/change_email_text" />
+
+
 
     </LinearLayout>
 
@@ -158,17 +164,17 @@
         android:background="@drawable/background_auth_button"
         android:layout_marginBottom="30dp"
         android:padding="8dp"
-        android:id="@+id/button_signin">
+        android:id="@+id/verify_button">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sign_in"
+            android:text="@string/verify"
             android:textColor="@color/text_white"
             android:fontFamily="@font/poppins_bold"
             android:textSize="18sp"
             android:visibility="visible"
-            android:id="@+id/signup_button_text"
+            android:id="@+id/verify_button_text"
             android:layout_centerInParent="true"/>
 
         <ProgressBar
