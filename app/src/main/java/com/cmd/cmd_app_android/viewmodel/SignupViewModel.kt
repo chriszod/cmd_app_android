@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.cmd.cmd_app_android.view.fragments.sign_up.SignupEvents
 import com.cmd.cmd_app_android.view.fragments.sign_up.SignupState
 import com.cmd.cmd_app_android.common.Resource
+import com.cmd.cmd_app_android.data.models.UserDTO
 import com.cmd.cmd_app_android.data.models.defaultUser
 import com.cmd.cmd_app_android.domain.usecases.UserUseCases
 import com.cmd.cmd_app_android.view.utils.*
@@ -111,6 +112,7 @@ class SignupViewModel @Inject constructor(
                                 loading = false,
                                 user = userDto
                             )
+                            _uiEvents.send(SignupUiEvents.Success(userDto))
                             useCases.saveUserToDatastore(userDto.id, userDto.email, userDto.isEmailVerified)
                         }
                     }
@@ -152,4 +154,5 @@ class SignupViewModel @Inject constructor(
 sealed class SignupUiEvents {
     object NoInternetConnection : SignupUiEvents()
     data class Error(val error: String): SignupUiEvents()
+    data class Success(val user: UserDTO): SignupUiEvents()
 }

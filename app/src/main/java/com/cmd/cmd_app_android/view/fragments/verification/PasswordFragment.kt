@@ -12,6 +12,7 @@ import com.cmd.cmd_app_android.view.activities.MainActivity
 import com.cmd.cmd_app_android.view.utils.handleError
 import com.cmd.cmd_app_android.view.utils.navigateActivity
 import com.cmd.cmd_app_android.view.utils.onChange
+import com.cmd.cmd_app_android.viewmodel.UiEvents
 import com.cmd.cmd_app_android.viewmodel.VerificationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -29,6 +30,17 @@ class PasswordFragment : Fragment(R.layout.fragment_password) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentPasswordBinding.bind(view)
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.uiEvents.collect {
+                when (it) {
+                    is UiEvents.ChangedSuccessfully -> {
+                        navigateActivity(requireContext(), MainActivity())
+                    }
+                }
+            }
+        }
+
         binding.passwordTextField.onChange {
             viewModel.execute(VerificationEvents.ChangePasswordTextField(it))
         }
@@ -45,11 +57,10 @@ class PasswordFragment : Fragment(R.layout.fragment_password) {
                 if (it.loading) {
                     binding.loading(requireContext())
                 }
-                if(it.user != defaultUser && !it.loading && it.changedSuccessfully){
+                if (it.user != defaultUser && !it.loading && it.changedSuccessfully) {
                     binding.success(requireContext())
-                    navigateActivity(requireContext(), MainActivity())
                 }
-                if(it.error.isNotBlank() && !it.loading){
+                if (it.error.isNotBlank() && !it.loading) {
                     binding.error(requireContext())
                 }
                 binding.apply {
@@ -74,7 +85,8 @@ fun FragmentPasswordBinding.loading(context: Context) {
         continueButtonText.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
         buttonContinue.isClickable = false
-        buttonContinue.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button_loading)
+        buttonContinue.background =
+            AppCompatResources.getDrawable(context, R.drawable.background_auth_button_loading)
     }
 
 }
@@ -84,7 +96,8 @@ fun FragmentPasswordBinding.success(context: Context) {
         continueButtonText.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
         buttonContinue.isClickable = true
-        buttonContinue.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
+        buttonContinue.background =
+            AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
     }
 
 }
@@ -94,6 +107,7 @@ fun FragmentPasswordBinding.error(context: Context) {
         continueButtonText.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
         buttonContinue.isClickable = true
-        buttonContinue.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
+        buttonContinue.background =
+            AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
     }
 }

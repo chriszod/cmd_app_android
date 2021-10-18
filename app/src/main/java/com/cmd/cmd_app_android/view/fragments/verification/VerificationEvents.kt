@@ -8,4 +8,5 @@ sealed class VerificationEvents {
     object Continue : VerificationEvents()
     object GetOtp: VerificationEvents()
     data class PostOtp(val otp: String): VerificationEvents()
+    object GetUserByID: VerificationEvents()
 }

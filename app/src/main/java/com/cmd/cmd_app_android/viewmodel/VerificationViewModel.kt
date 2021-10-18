@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmd.cmd_app_android.common.Resource
 import com.cmd.cmd_app_android.data.models.defaultUser
+import com.cmd.cmd_app_android.domain.usecases.GetUserByEmail
 import com.cmd.cmd_app_android.domain.usecases.UserUseCases
 import com.cmd.cmd_app_android.view.fragments.verification.VerificationEvents
 import com.cmd.cmd_app_android.view.fragments.verification.VerificationState
@@ -28,6 +29,10 @@ class VerificationViewModel @Inject constructor(
 
     private val _uiEvents = Channel<UiEvents>()
     val uiEvents = _uiEvents.receiveAsFlow()
+
+    init {
+        execute(VerificationEvents.GetUserByID)
+    }
 
     fun execute(event: VerificationEvents) {
         viewModelScope.launch {
@@ -74,21 +79,71 @@ class VerificationViewModel @Inject constructor(
                         otpResponse = event.otp
                     )
                 }
+                is VerificationEvents.GetUserByID -> {
+                    getUser()
+                }
+            }
+        }
+    }
+
+    private suspend fun getUser() {
+        val data = useCases.getUserInfoFromDatastore().first()
+        val id = data["user_id"] as String
+        useCases.getUserById(id).collectLatest {
+            when (it) {
+                is Resource.Loading -> {
+                    _verificationState.value = verificationState.value.copy(loading = true)
+                }
+                is Resource.Error -> {
+                    _verificationState.value = verificationState.value.copy(
+                        loading = false,
+                        error = it.error ?: "Unknown Error Occurred"
+                    )
+                }
+                is Resource.Success -> {
+                    val user = it.data ?: defaultUser
+                    _verificationState.value = verificationState.value.copy(
+                        loading = false,
+                        user = user
+                    )
+                }
             }
         }
     }
 
     private suspend fun verifyOtp() {
-        Log.d("TAG", "verifyOtp: verifying")
         val state = verificationState.value
         if(state.otp.value == state.otpResponse) {
-            Log.d("TAG", "verifyOtp: equal")
-            _uiEvents.send(UiEvents.OtpVerifiedSuccessfully)
+            if(state.user.id.isNotBlank()) {
+                useCases.updateUser(state.user.copy(isEmailVerified = true)).collect {
+                    when (it) {
+                        is Resource.Loading -> {
+                            _verificationState.value = verificationState.value.copy(loading = true)
+                        }
+                        is Resource.Error -> {
+                            _verificationState.value = verificationState.value.copy(
+                                loading = false,
+                                error = it.error ?: "Unknown Error Occurred"
+                            )
+                        }
+                        is Resource.Success -> {
+                            val user = it.data ?: defaultUser
+                            _verificationState.value = verificationState.value.copy(
+                                loading = false,
+                                user = user
+                            )
+                            useCases.saveUserToDatastore(user.id, user.email, user.isEmailVerified)
+                        }
+                    }
+                }
+                _uiEvents.send(UiEvents.OtpVerifiedSuccessfully)
+            } else {
+                getUser()
+            }
         } else {
             _verificationState.value = state.copy(
                 otp = state.otp.copy(valid = false, errorMessage = "Wrong Otp")
             )
-            Log.d("TAG", "verifyOtp: unequal")
             _uiEvents.send(UiEvents.WrongOtp)
         }
     }
@@ -116,8 +171,10 @@ class VerificationViewModel @Inject constructor(
                         val user = it.data ?: defaultUser
                         _verificationState.value = verificationState.value.copy(
                             loading = false,
-                            user = user
+                            user = user,
+                            changedSuccessfully = true
                         )
+                        _uiEvents.send(UiEvents.ChangedSuccessfully)
                         useCases.saveUserToDatastore(user.id, user.email, user.isEmailVerified)
                     }
                 }
@@ -153,4 +210,5 @@ class VerificationViewModel @Inject constructor(
 sealed class UiEvents {
     object WrongOtp: UiEvents()
     object OtpVerifiedSuccessfully: UiEvents()
+    object ChangedSuccessfully: UiEvents()
 }

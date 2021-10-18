@@ -48,6 +48,10 @@ class SignUpFragment: Fragment(R.layout.fragment_signup) {
                     is SignupUiEvents.Error -> {
                         makeAlertDialog(requireContext(), it.error).setTitle("Error").create().show()
                     }
+                    is SignupUiEvents.Success -> {
+                        val action = SignUpFragmentDirections.actionSignUpFragmentToOtpFragment(it.user.otp)
+                        findNavController().navigate(action)
+                    }
                 }
             }
         }
