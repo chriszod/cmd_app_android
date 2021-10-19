@@ -36,15 +36,15 @@ class OtpFragment: Fragment(R.layout.fragment_otp) {
             viewModel.execute(OtpEvents.PostOtp(args.otp!!))
         }
 
+//        binding.resendButton.setOnClickListener {
+//            viewModel.execute(OtpEvents.GetOtp)
+//        }
+
         lifecycleScope.launchWhenStarted {
             viewModel.uiEvents.collect {
                 when(it) {
                     is UiEvents.WrongOtp -> {
-                        binding.otpErrorLayout.visibility = View.VISIBLE
-                        binding.resendButton.setOnClickListener {
-                            viewModel.execute(OtpEvents.GetOtp)
-                            binding.resendButton.isClickable = false
-                        }
+
                     }
                     UiEvents.OtpVerifiedSuccessfully -> {
                         findNavController().navigate(R.id.action_otpFragment_to_passwordFragment)
@@ -59,7 +59,6 @@ class OtpFragment: Fragment(R.layout.fragment_otp) {
 
         binding.verifyButton.setOnClickListener {
             viewModel.execute(OtpEvents.VerifyOtp)
-            Log.d("TAG", "onViewCreated: clicking")
         }
 
         lifecycleScope.launchWhenStarted {
@@ -69,9 +68,11 @@ class OtpFragment: Fragment(R.layout.fragment_otp) {
                 }
                 if(it.user != defaultUser && !it.loading){
                     binding.success(requireContext())
+                    binding.resendButton.isClickable = false
                 }
                 if(it.error.isNotBlank() && !it.loading){
                     binding.error(requireContext())
+                    binding.resendButton.isClickable = false
                 }
                 binding.apply {
                     otpError.handleError(it.otp.errorMessage, it.otp.valid)
@@ -88,6 +89,9 @@ class OtpFragment: Fragment(R.layout.fragment_otp) {
 
 fun FragmentOtpBinding.loading(context: Context) {
     this.apply {
+        resendButton.isClickable = false
+        resendButtonText.text = context.getString(R.string.please_wait)
+        resendButton.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button_loading)
         verifyButtonText.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
         verifyButton.isClickable = false
@@ -98,6 +102,9 @@ fun FragmentOtpBinding.loading(context: Context) {
 
 fun FragmentOtpBinding.success(context: Context) {
     this.apply {
+        resendButton.isClickable = true
+        resendButtonText.text = context.getString(R.string.resend)
+        resendButton.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
         verifyButtonText.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
         verifyButton.isClickable = true
@@ -108,6 +115,9 @@ fun FragmentOtpBinding.success(context: Context) {
 
 fun FragmentOtpBinding.error(context: Context) {
     this.apply {
+        resendButton.isClickable = true
+        resendButtonText.text = context.getString(R.string.resend)
+        resendButton.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
         verifyButtonText.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
         verifyButton.isClickable = true
