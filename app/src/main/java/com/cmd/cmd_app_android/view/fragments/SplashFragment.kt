@@ -7,13 +7,20 @@ import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.cmd.cmd_app_android.domain.repository.DatastoreRepository
+import com.cmd.cmd_app_android.domain.usecases.GetUserInfoFromDatastore
+import com.cmd.cmd_app_android.domain.usecases.UserUseCases
 import com.cmd.cmd_app_android.view.activities.MainActivity
 import com.cmd.cmd_app_android.view.activities.StarterActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import thecmdteam.cmd_app_android.R
 import thecmdteam.cmd_app_android.databinding.FragmentSplashBinding
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SplashFragment : Fragment(R.layout.fragment_splash){
     private var _binding: FragmentSplashBinding? = null
     private val binding get() = _binding!!
@@ -42,3 +49,4 @@ class SplashFragment : Fragment(R.layout.fragment_splash){
 
     }
 }
+

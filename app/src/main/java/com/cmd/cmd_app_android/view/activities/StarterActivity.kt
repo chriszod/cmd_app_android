@@ -1,13 +1,14 @@
 package com.cmd.cmd_app_android.view.activities
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import dagger.hilt.android.AndroidEntryPoint
 import thecmdteam.cmd_app_android.R
 import thecmdteam.cmd_app_android.databinding.ActivityStarterBinding
 
+@AndroidEntryPoint
 class StarterActivity:AppCompatActivity() {
     private lateinit var binding: ActivityStarterBinding
     lateinit var navController: NavController
