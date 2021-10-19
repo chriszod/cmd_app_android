@@ -137,13 +137,13 @@ class UserRepositoryImpl constructor(
     override suspend fun updateUser(user: UserDTO): Flow<Resource<UserDTO>> = flow {
         emit(Resource.Loading())
         try {
-            val response = api.updateUser(user, user.id.toString())
+            val response = api.updateUser(user, user.id)
             if (response.isSuccessful) {
                 response.body()?.let {
+                    Log.d("TAG", "updateUser: $it")
                     emit(Resource.Success<UserDTO>(it))
                 }
             }
-            emit(Resource.Success<UserDTO>())
         }catch (e: Exception) {
             emit(Resource.Error<UserDTO>(e.message))
         }
@@ -158,7 +158,6 @@ class UserRepositoryImpl constructor(
                     emit(Resource.Success<UserDTO>(it))
                 }
             }
-            emit(Resource.Success<UserDTO>())
         }catch (e: Exception) {
             emit(Resource.Error<UserDTO>(e.message))
             Log.d("TAG", "getUserByEmail: ${e.message}")

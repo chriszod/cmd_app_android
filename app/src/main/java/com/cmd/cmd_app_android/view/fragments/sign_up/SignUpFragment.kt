@@ -90,8 +90,6 @@ class SignUpFragment: Fragment(R.layout.fragment_signup) {
                 }
                 if (it.user != defaultUser && !it.loading) {
                     binding.success(requireContext())
-                    val action = SignUpFragmentDirections.actionSignUpFragmentToOtpFragment(it.user.otp)
-                    findNavController().navigate(action)
                 }
                 binding.apply {
                     emailErrorText.handleError(it.email.errorMessage, it.email.valid)

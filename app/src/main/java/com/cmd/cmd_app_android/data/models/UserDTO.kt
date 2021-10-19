@@ -11,7 +11,7 @@ data class UserDTO(
     val isEmailVerified: Boolean,
     @SerializedName("lname")
     val lastName: String,
-    val otp: String,
+    val otp: String? = "",
     val phone: String,
     val techTrack: String
 )
