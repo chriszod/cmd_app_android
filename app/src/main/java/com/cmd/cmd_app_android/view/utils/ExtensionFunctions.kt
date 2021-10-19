@@ -74,11 +74,3 @@ fun makeAlertDialog(context: Context, error: String): AlertDialog.Builder {
         .setPositiveButton("Ok"
         ) { dialog, p1 -> dialog?.cancel() }
 }
-
-fun Fragment.navigateActivity(context: Context, activity: Activity) {
-    Intent(context, activity::class.java).apply {
-        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-    }.also {
-        context.startActivity(it)
-    }
-}

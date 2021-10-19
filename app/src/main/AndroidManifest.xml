@@ -15,7 +15,8 @@
         <activity
             android:name="com.cmd.cmd_app_android.view.activities.MainActivity"
             android:exported="true"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Cmd_app_android_action_bar">
         </activity>
         <activity
             android:name="com.cmd.cmd_app_android.view.activities.StarterActivity"

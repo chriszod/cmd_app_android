@@ -21,7 +21,8 @@
     <string name="last_name">Lastname</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="email_verification">Email Verification</string>
-    <string name="email_verification_text">an otp was send to your email for foran otp was send to your email for for an otp was send to your email for for an otp was send to your email for for</string>
+    <string name="please_wait">Please wait…</string>
+    <string name="email_verification_text">A one time passcode was sent to your email, please check your email or the spam directory of the email for the one time passcode sent to you. Please do not share this with anyone</string>
     <string name="change_email">Change Email?</string>
     <string name="verify">Verify</string>
     <string name="otp">OTP</string>
@@ -30,4 +31,5 @@
     <string name="retype_new_password">Retype New Password</string>
     <string name="continue_text">Continue</string>
     <string name="resend">Resend</string>
+    <string name="didn_t_receive_otp">Didn\'t receive otp?</string>
 </resources>

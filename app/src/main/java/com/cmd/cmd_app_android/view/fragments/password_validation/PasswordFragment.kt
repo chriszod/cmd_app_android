@@ -1,6 +1,7 @@
-package com.cmd.cmd_app_android.view.fragments.verification
+package com.cmd.cmd_app_android.view.fragments.password_validation
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
@@ -10,15 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import com.cmd.cmd_app_android.data.models.defaultUser
 import com.cmd.cmd_app_android.view.activities.MainActivity
 import com.cmd.cmd_app_android.view.utils.handleError
-import com.cmd.cmd_app_android.view.utils.navigateActivity
 import com.cmd.cmd_app_android.view.utils.onChange
-import com.cmd.cmd_app_android.viewmodel.UiEvents
-import com.cmd.cmd_app_android.viewmodel.VerificationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import thecmdteam.cmd_app_android.R
 import thecmdteam.cmd_app_android.databinding.FragmentPasswordBinding
-import thecmdteam.cmd_app_android.databinding.FragmentSigninBinding
 
 @AndroidEntryPoint
 class PasswordFragment : Fragment(R.layout.fragment_password) {
@@ -26,7 +23,7 @@ class PasswordFragment : Fragment(R.layout.fragment_password) {
     private var _binding: FragmentPasswordBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: VerificationViewModel by viewModels()
+    private val viewModel: PasswordValidationViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentPasswordBinding.bind(view)
@@ -35,29 +32,33 @@ class PasswordFragment : Fragment(R.layout.fragment_password) {
             viewModel.uiEvents.collect {
                 when (it) {
                     is UiEvents.ChangedSuccessfully -> {
-                        navigateActivity(requireContext(), MainActivity())
+                        Intent(requireContext(), MainActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        }.also {
+                            requireContext().startActivity(it)
+                        }
                     }
                 }
             }
         }
 
         binding.passwordTextField.onChange {
-            viewModel.execute(VerificationEvents.ChangePasswordTextField(it))
+            viewModel.execute(PasswordValidationEvents.ChangePasswordTextField(it))
         }
         binding.confirmNewPasswordTextField.onChange {
-            viewModel.execute(VerificationEvents.ChangeConfirmPasswordTextField(it))
+            viewModel.execute(PasswordValidationEvents.ChangeConfirmPasswordTextField(it))
         }
 
         binding.buttonContinue.setOnClickListener {
-            viewModel.execute(VerificationEvents.Continue)
+            viewModel.execute(PasswordValidationEvents.Continue)
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.verificationState.collect {
+            viewModel.passwordValidationState.collect {
                 if (it.loading) {
                     binding.loading(requireContext())
                 }
-                if (it.user != defaultUser && !it.loading && it.changedSuccessfully) {
+                if (it.user != defaultUser && !it.loading) {
                     binding.success(requireContext())
                 }
                 if (it.error.isNotBlank() && !it.loading) {

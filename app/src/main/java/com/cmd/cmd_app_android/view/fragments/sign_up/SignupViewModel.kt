@@ -112,8 +112,8 @@ class SignupViewModel @Inject constructor(
                                 loading = false,
                                 user = userDto
                             )
-                            _uiEvents.send(SignupUiEvents.Success(userDto))
                             useCases.saveUserToDatastore(userDto.id, userDto.email, userDto.isEmailVerified)
+                            _uiEvents.send(SignupUiEvents.Success(userDto))
                         }
                     }
                 }
