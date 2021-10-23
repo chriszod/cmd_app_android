@@ -41,6 +41,8 @@ class UserRepositoryImpl constructor(
                         } else {
                             emit(Resource.Error<UserDTO>("An Unknown error occurred"))
                         }
+                    } else {
+                        emit(Resource.Error<UserDTO>("Wrong credentials"))
                     }
                 }
             }
