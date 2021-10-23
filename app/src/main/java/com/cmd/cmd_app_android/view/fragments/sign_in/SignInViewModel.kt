@@ -36,7 +36,7 @@ class SignInViewModel @Inject constructor(
                     val validate = validateEmail(event.value)
                     _signInState.value = signInState.value.copy(
                         emailState = signInState.value.emailState.copy(
-                            value = event.value,
+                            value = event.value.trim(),
                             valid = !validate.error,
                             errorMessage = validate.message
                         )

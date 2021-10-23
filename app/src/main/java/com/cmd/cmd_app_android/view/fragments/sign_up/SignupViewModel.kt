@@ -41,7 +41,7 @@ class SignupViewModel @Inject constructor(
                     val validate = validateEmail(event.value)
                     _signupState.value = signupState.value.copy(
                         email = signupState.value.email.copy(
-                            value = event.value,
+                            value = event.value.trim(),
                             valid = !validate.error,
                             errorMessage = validate.message
                         )
@@ -51,7 +51,7 @@ class SignupViewModel @Inject constructor(
                     val validate = validateName(event.value)
                     _signupState.value = signupState.value.copy(
                         firstName = signupState.value.firstName.copy(
-                            value = event.value,
+                            value = event.value.trim(),
                             valid = !validate.error,
                             errorMessage = validate.message
                         )
@@ -61,7 +61,7 @@ class SignupViewModel @Inject constructor(
                     val validate = validateName(event.value)
                     _signupState.value = signupState.value.copy(
                         lastName = signupState.value.lastName.copy(
-                            value = event.value,
+                            value = event.value.trim(),
                             valid = !validate.error,
                             errorMessage = validate.message
                         )
@@ -71,7 +71,7 @@ class SignupViewModel @Inject constructor(
                     val validate = validatePhone(event.value)
                     _signupState.value = signupState.value.copy(
                         phone = signupState.value.phone.copy(
-                            value = event.value,
+                            value = event.value.trim(),
                             valid = !validate.error,
                             errorMessage = validate.message
                         )
