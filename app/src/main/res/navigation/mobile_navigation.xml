@@ -34,5 +34,9 @@
     <dialog
         android:id="@+id/profileSettingsFragment"
         android:name="com.cmd.cmd_app_android.view.fragments.accounts.ProfileSettingsFragment"
-        android:label="ProfileSettingsFragment" />
+        android:label="ProfileSettingsFragment" >
+        <argument
+            android:name="user"
+            app:argType="com.cmd.cmd_app_android.data.models.UserDTO" />
+    </dialog>
 </navigation>

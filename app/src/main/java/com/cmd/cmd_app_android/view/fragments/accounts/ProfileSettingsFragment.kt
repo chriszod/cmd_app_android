@@ -9,15 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavArgs
+import androidx.navigation.fragment.navArgs
 import com.cmd.cmd_app_android.data.models.UserDTO
 import com.cmd.cmd_app_android.data.models.defaultUser
 import com.cmd.cmd_app_android.view.utils.onChange
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import thecmdteam.cmd_app_android.R
@@ -29,7 +34,9 @@ class ProfileSettingsFragment: BottomSheetDialogFragment() {
     private var _binding: FragmentProfileSettingsBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var progressDialog: MaterialAlertDialogBuilder
+    private val args: ProfileSettingsFragmentArgs by navArgs()
+
+    private lateinit var progressDialog: AlertDialog
     
     private val viewModel by viewModels<AccountsViewModel>()
 
@@ -46,10 +53,18 @@ class ProfileSettingsFragment: BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentProfileSettingsBinding.bind(view)
+        val user = args.user
+        binding.apply {
+            emailTextField.setText(user.email)
+            phoneTextField.setText(user.phone)
+            firstNameTextField.setText(user.firstName)
+            lastNameTextField.setText(user.lastName)
+        }
 
         progressDialog = MaterialAlertDialogBuilder(requireContext())
             .setCancelable(false)
             .setView(R.layout.layout_loading)
+            .create()
 
         binding.firstNameTextField.onChange {
             viewModel.execute(AccountEvents.FirstNameTextChange(it))
@@ -73,7 +88,32 @@ class ProfileSettingsFragment: BottomSheetDialogFragment() {
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.state.collectLatest {
-                binding.success(requireContext(), it.user)
+                if(!it.loading && it.error.isBlank()) {
+                    binding.success(requireContext())
+                    progressDialog.dismiss()
+                }
+                if(it.loading) {
+                    progressDialog.show()
+                }
+                if (!it.loading && it.error.isNotBlank()){
+                    progressDialog.dismiss()
+                    Snackbar.make(view, it.error, LENGTH_LONG).apply {
+                        setAction("Try Again") {
+                            viewModel.execute(AccountEvents.UpdateUser)
+                        }
+                    }.show()
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.event.collectLatest {
+                when(it) {
+                    UiEvent.UpdatedSuccessfully -> {
+                        Toast.makeText(requireContext(), "Updated Successfully", Toast.LENGTH_SHORT).show()
+                        dismiss()
+                    }
+                }
             }
         }
     }
@@ -91,7 +131,7 @@ fun FragmentProfileSettingsBinding.loading(context: Context) {
 
 }
 
-fun FragmentProfileSettingsBinding.success(context: Context, user: UserDTO) {
+fun FragmentProfileSettingsBinding.success(context: Context) {
     this.apply {
         updateButtonText.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
@@ -99,10 +139,6 @@ fun FragmentProfileSettingsBinding.success(context: Context, user: UserDTO) {
         buttonChangeEmail.isClickable = true
         buttonUpdate.background =
             AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
-        emailTextField.setText(user.email)
-        phoneTextField.setText(user.phone)
-        firstNameTextField.setText(user.firstName)
-        lastNameTextField.setText(user.lastName)
     }
 
 }

@@ -26,10 +26,6 @@ class AccountsViewModel @Inject constructor(
     private val _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
 
-    init {
-        execute(AccountEvents.GetUser)
-    }
-
     fun execute(event: AccountEvents) {
         viewModelScope.launch {
             when(event) {
@@ -180,10 +176,15 @@ class AccountsViewModel @Inject constructor(
                     )
                 }
                 is Resource.Success -> {
-                    _state.value = _state.value.copy(
+                    val value = state.value
+                    _state.value = value.copy(
                         error = "",
                         loading = false,
-                        user = it.data ?: defaultUser
+                        user = it.data ?: defaultUser,
+                        email = value.email.copy(value = it.data?.email ?: ""),
+                        firstName = value.firstName.copy(value = it.data?.firstName ?: ""),
+                        lastName = value.email.copy(value = it.data?.lastName ?: ""),
+                        phone = value.email.copy(value = it.data?.phone ?: ""),
                     )
                 }
             }
