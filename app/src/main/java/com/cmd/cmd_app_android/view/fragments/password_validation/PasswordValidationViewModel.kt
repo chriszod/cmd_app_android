@@ -1,12 +1,11 @@
 package com.cmd.cmd_app_android.view.fragments.password_validation
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmd.cmd_app_android.common.Resource
 import com.cmd.cmd_app_android.data.models.defaultUser
-import com.cmd.cmd_app_android.domain.usecases.UserUseCases
+import com.cmd.cmd_app_android.domain.usecases.auth_use_cases.UserUseCases
 import com.cmd.cmd_app_android.view.utils.validateConfirmPassword
 import com.cmd.cmd_app_android.view.utils.validatePassword
 import dagger.hilt.android.lifecycle.HiltViewModel

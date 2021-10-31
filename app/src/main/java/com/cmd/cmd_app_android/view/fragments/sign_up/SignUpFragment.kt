@@ -39,7 +39,7 @@ class SignUpFragment: Fragment(R.layout.fragment_signup) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSignupBinding.bind(view)
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.uiEvents.collect {
                 when(it){
                     SignupUiEvents.NoInternetConnection -> {
@@ -49,7 +49,7 @@ class SignUpFragment: Fragment(R.layout.fragment_signup) {
                         makeAlertDialog(requireContext(), it.error).setTitle("Error").create().show()
                     }
                     is SignupUiEvents.Success -> {
-                        val action = SignUpFragmentDirections.actionSignUpFragmentToOtpFragment(it.user.otp)
+                        val action = SignUpFragmentDirections.actionSignUpFragmentToOtpFragment(it.user.otp, it.user)
                         findNavController().navigate(action)
                     }
                 }
@@ -80,7 +80,7 @@ class SignUpFragment: Fragment(R.layout.fragment_signup) {
             findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
         }
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.signupState.collect {
                 if (it.loading) {
                     binding.loading(requireContext())

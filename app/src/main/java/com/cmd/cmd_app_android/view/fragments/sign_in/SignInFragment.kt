@@ -32,7 +32,7 @@ class SignInFragment : Fragment(R.layout.fragment_signin) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentSigninBinding.bind(view)
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.signInState.collectLatest {
                 if (it.loading) {
                     binding.loading(requireContext())
@@ -79,7 +79,7 @@ class SignInFragment : Fragment(R.layout.fragment_signin) {
             findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
         }
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect {
                 when (it) {
                     is SignInUiEvents.NoInternetConnection -> {

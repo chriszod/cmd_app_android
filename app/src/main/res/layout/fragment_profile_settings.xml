@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scroll_view"
+        android:background="@drawable/background_update_account"
+        android:paddingHorizontal="25dp"
+        android:paddingBottom="20dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_sigin_header"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="15dp"
+                android:text="@string/update_account"
+                android:fontFamily="@font/poppins_bold"
+                android:textSize="30sp"
+                android:textColor="@color/text_white"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/text_sigin_header"
+                app:layout_constraintStart_toStartOf="parent"
+                android:orientation="vertical"
+                android:id="@+id/first_name_section"
+                android:layout_marginTop="17dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_white"
+                    android:textSize="18sp"
+                    android:text="@string/first_name"
+                    android:fontFamily="@font/poppins_light"
+                    android:id="@+id/first_name_label"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_text_field"
+                    android:padding="10dp"
+                    android:textColor="@color/brand_black"
+                    android:id="@+id/first_name_text_field"
+                    android:hint="@null"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/first_name_error_text"
+                    android:textColor="@color/error_red"
+                    tools:text="Name is not valid"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/poppins_medium"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/first_name_section"
+                app:layout_constraintStart_toStartOf="parent"
+                android:orientation="vertical"
+                android:id="@+id/last_name_section"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_white"
+                    android:textSize="18sp"
+                    android:text="@string/last_name"
+                    android:fontFamily="@font/poppins_light"
+                    android:id="@+id/last_name_label"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_text_field"
+                    android:padding="10dp"
+                    android:textColor="@color/brand_black"
+                    android:id="@+id/last_name_text_field"
+                    android:hint="@null"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/last_name_error_text"
+                    android:textColor="@color/error_red"
+                    tools:text="Name is not valid"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/poppins_medium"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/last_name_section"
+                app:layout_constraintStart_toStartOf="parent"
+                android:orientation="vertical"
+                android:id="@+id/email_section"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_white"
+                    android:textSize="18sp"
+                    android:text="@string/email"
+                    android:fontFamily="@font/poppins_light"
+                    android:id="@+id/email_label"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_text_field"
+                    android:padding="10dp"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/brand_black"
+                    android:id="@+id/email_text_field"
+                    android:hint="@null"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/email_error_text"
+                    android:textColor="@color/error_red"
+                    tools:text="Name is not valid"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/poppins_medium"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/email_section"
+                app:layout_constraintStart_toStartOf="parent"
+                android:orientation="vertical"
+                android:id="@+id/phone_section"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_white"
+                    android:textSize="18sp"
+                    android:text="@string/phone_number"
+                    android:fontFamily="@font/poppins_light"
+                    android:id="@+id/phone_label"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_text_field"
+                    android:padding="10dp"
+                    android:inputType="phone"
+                    android:textColor="@color/brand_black"
+                    android:id="@+id/phone_text_field"
+                    android:hint="@null"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/phone_error_text"
+                    android:textColor="@color/error_red"
+                    tools:text="Name is not valid"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/poppins_medium"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/phone_section"
+                android:background="@drawable/background_auth_button"
+                android:layout_marginTop="30dp"
+                android:padding="8dp"
+                android:id="@+id/button_update">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/update"
+                    android:textColor="@color/text_white"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textSize="18sp"
+                    android:visibility="visible"
+                    android:id="@+id/update_button_text"
+                    android:layout_centerInParent="true"/>
+
+                <ProgressBar
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:indeterminate="true"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"
+                    android:indeterminateTintMode="src_atop"
+                    android:indeterminateTint="@color/brand_yellow"
+                    android:id="@+id/progressBar"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/button_update"
+                android:background="@drawable/background_auth_button"
+                android:layout_marginTop="20dp"
+                android:padding="8dp"
+                android:id="@+id/button_change_email">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/change_email"
+                    android:textColor="@color/text_white"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textSize="18sp"
+                    android:visibility="visible"
+                    android:id="@+id/button_change_email_text"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

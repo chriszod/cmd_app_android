@@ -11,6 +11,8 @@
     <color name="brand_black"> #080808</color>
     <color name="darker_white">#D9FFFFFF</color>
     <color name="light_white">#0DFFFFFF</color>
+    <color name="light_dark">#68080808</color>
+    <color name="lighter_dark">#2C080808</color>
     <color name="light_blue_400">#FF29B6F6</color>
     <color name="light_blue_600">#FF039BE5</color>
     <color name="gray_400">#FFBDBDBD</color>

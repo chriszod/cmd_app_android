@@ -1,4 +1,4 @@
-package com.cmd.cmd_app_android.domain.usecases
+package com.cmd.cmd_app_android.domain.usecases.auth_use_cases
 
 
 //for implementing user use cases for better implementation
@@ -12,5 +12,7 @@ data class UserUseCases(
     val changePassword: ChangePassword,
     val verifyEmail: VerifyEmail,
     val saveUserToDatastore: SaveUserToDatastore,
-    val getUserInfoFromDatastore: GetUserInfoFromDatastore
+    val getUserInfoFromDatastore: GetUserInfoFromDatastore,
+    val logoutUser: LogoutUser,
+    val deleteUser: DeleteUser
 )

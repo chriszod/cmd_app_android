@@ -4,11 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmd.cmd_app_android.common.Resource
 import com.cmd.cmd_app_android.data.models.defaultUser
-import com.cmd.cmd_app_android.domain.usecases.UserUseCases
-import com.cmd.cmd_app_android.view.fragments.password_validation.UiEvents
-import com.cmd.cmd_app_android.view.utils.validateConfirmPassword
+import com.cmd.cmd_app_android.domain.usecases.auth_use_cases.UserUseCases
 import com.cmd.cmd_app_android.view.utils.validateEmail
-import com.cmd.cmd_app_android.view.utils.validatePassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +23,7 @@ class EmailValidationViewModel @Inject constructor(
     private val _emailValidationState = MutableStateFlow(EmailValidationState())
     val emailValidationState get() = _emailValidationState.asStateFlow()
 
-    private val _uiState = Channel<UiState>()
+    private val _uiState = Channel<UiEvents>()
     val uiState = _uiState.receiveAsFlow()
 
     fun execute(event: EmailValidationEvents) {
@@ -61,7 +58,7 @@ class EmailValidationViewModel @Inject constructor(
                             user = user,
                         )
                         useCases.saveUserToDatastore(user.id, user.email, false)
-                        _uiState.send(UiState.Success)
+                        _uiState.send(UiEvents.EmailValidationSuccess)
 
                     }
                     is Resource.Error -> {
@@ -81,6 +78,6 @@ class EmailValidationViewModel @Inject constructor(
     }
 }
 
-sealed class UiState {
-    object Success: UiState()
+sealed class UiEvents {
+    object EmailValidationSuccess: UiEvents()
 }

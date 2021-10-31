@@ -2,7 +2,6 @@ package com.cmd.cmd_app_android.view.fragments.otp
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
@@ -11,8 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cmd.cmd_app_android.data.models.defaultUser
+import com.cmd.cmd_app_android.view.utils.gone
 import com.cmd.cmd_app_android.view.utils.handleError
 import com.cmd.cmd_app_android.view.utils.onChange
+import com.cmd.cmd_app_android.view.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import thecmdteam.cmd_app_android.R
@@ -36,18 +37,27 @@ class OtpFragment: Fragment(R.layout.fragment_otp) {
             viewModel.execute(OtpEvents.PostOtp(args.otp!!))
         }
 
-//        binding.resendButton.setOnClickListener {
-//            viewModel.execute(OtpEvents.GetOtp)
-//        }
+        viewModel.execute(OtpEvents.PostUser(args.user!!))
+
+        binding.resendButton.setOnClickListener {
+            viewModel.execute(OtpEvents.GetOtp)
+        }
 
         lifecycleScope.launchWhenStarted {
             viewModel.uiEvents.collect {
                 when(it) {
-                    is UiEvents.WrongOtp -> {
-
-                    }
                     UiEvents.OtpVerifiedSuccessfully -> {
                         findNavController().navigate(R.id.action_otpFragment_to_passwordFragment)
+                    }
+                    is UiEvents.GettingOtp -> {
+                        binding.loadingLayout.root.visible()
+                        binding.loadingLayout.textMessage.text = resources.getString(R.string.please_wait)
+                    }
+                    is UiEvents.OtpError -> {
+                        binding.loadingLayout.root.gone()
+                    }
+                    is UiEvents.OtpSuccess -> {
+                        binding.loadingLayout.root.gone()
                     }
                 }
             }
@@ -72,7 +82,7 @@ class OtpFragment: Fragment(R.layout.fragment_otp) {
                 }
                 if(it.error.isNotBlank() && !it.loading){
                     binding.error(requireContext())
-                    binding.resendButton.isClickable = false
+                    binding.resendButton.isClickable = true
                 }
                 binding.apply {
                     otpError.handleError(it.otp.errorMessage, it.otp.valid)
@@ -92,8 +102,8 @@ fun FragmentOtpBinding.loading(context: Context) {
         resendButton.isClickable = false
         resendButtonText.text = context.getString(R.string.please_wait)
         resendButton.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button_loading)
-        verifyButtonText.visibility = View.GONE
-        progressBar.visibility = View.VISIBLE
+        verifyButtonText.gone()
+        progressBar.visible()
         verifyButton.isClickable = false
         verifyButton.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button_loading)
     }
@@ -105,8 +115,8 @@ fun FragmentOtpBinding.success(context: Context) {
         resendButton.isClickable = true
         resendButtonText.text = context.getString(R.string.resend)
         resendButton.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
-        verifyButtonText.visibility = View.VISIBLE
-        progressBar.visibility = View.GONE
+        verifyButtonText.visible()
+        progressBar.gone()
         verifyButton.isClickable = true
         verifyButton.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
     }
@@ -118,8 +128,8 @@ fun FragmentOtpBinding.error(context: Context) {
         resendButton.isClickable = true
         resendButtonText.text = context.getString(R.string.resend)
         resendButton.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
-        verifyButtonText.visibility = View.VISIBLE
-        progressBar.visibility = View.GONE
+        verifyButtonText.visible()
+        progressBar.gone()
         verifyButton.isClickable = true
         verifyButton.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
     }

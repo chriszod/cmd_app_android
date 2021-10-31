@@ -1,6 +1,7 @@
 package com.cmd.cmd_app_android.data.models
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class UserDTO(
     val email: String,
@@ -14,7 +15,7 @@ data class UserDTO(
     val otp: String? = "",
     val phone: String,
     val techTrack: String
-)
+): Serializable
 
 fun UserDTO.userDTOtoRequestObject(): UserRequestObject {
     return UserRequestObject(

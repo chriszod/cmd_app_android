@@ -12,6 +12,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.textfield.TextInputEditText
@@ -74,3 +75,9 @@ fun makeAlertDialog(context: Context, error: String): AlertDialog.Builder {
         .setPositiveButton("Ok"
         ) { dialog, p1 -> dialog?.cancel() }
 }
+
+fun View.visible() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.gone() { this.visibility = View.GONE }

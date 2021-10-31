@@ -5,8 +5,8 @@ import com.cmd.cmd_app_android.data.api.UserApi
 import com.cmd.cmd_app_android.data.repository.UserRepository
 import com.cmd.cmd_app_android.data.utils.BASE_URL
 import com.cmd.cmd_app_android.domain.repository.DatastoreRepository
-import com.cmd.cmd_app_android.domain.usecases.*
 import com.cmd.cmd_app_android.data.repository.UserRepositoryImpl
+import com.cmd.cmd_app_android.domain.usecases.auth_use_cases.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -71,7 +71,9 @@ object AppModule {
             changePassword = ChangePassword(repository),
             verifyEmail = VerifyEmail(repository),
             saveUserToDatastore = SaveUserToDatastore(datastoreRepository),
-            getUserInfoFromDatastore = GetUserInfoFromDatastore(datastoreRepository)
+            getUserInfoFromDatastore = GetUserInfoFromDatastore(datastoreRepository),
+            logoutUser = LogoutUser(datastoreRepository),
+            deleteUser = DeleteUser(repository)
         )
     }
 }

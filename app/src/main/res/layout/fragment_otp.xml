@@ -87,7 +87,7 @@
             android:orientation="horizontal"
             android:layout_marginTop="5dp"
             android:id="@+id/otp_error_layout"
-            android:visibility="gone">
+            android:visibility="visible">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -152,9 +152,6 @@
             android:text="@string/change_email"
             android:fontFamily="@font/poppins_light"
             android:id="@+id/change_email_text" />
-
-
-
     </LinearLayout>
 
     <RelativeLayout
@@ -188,5 +185,9 @@
             android:id="@+id/progressBar"/>
 
     </RelativeLayout>
+
+    <include layout="@layout/layout_full_loading_screen"
+        android:elevation="100dp"
+        android:id="@+id/loading_layout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

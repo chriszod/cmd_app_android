@@ -91,4 +91,21 @@
 
     </RelativeLayout>
 
+    <!--<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_continue"
+        app:layout_constraintTop_toBottomOf="@id/email_section"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        android:text="Continue Sign up process"
+        android:fontFamily="@font/poppins_bold"
+        android:textSize="20sp"
+        android:textColor="@color/text_white"/>
+-->
+
+    <include layout="@layout/layout_full_loading_screen"
+        android:elevation="100dp"
+        android:id="@+id/loading_layout"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
