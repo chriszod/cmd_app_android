@@ -78,16 +78,12 @@ class ProfileSettingsFragment: BottomSheetDialogFragment() {
             viewModel.execute(AccountEvents.PhoneNumberChange(it))
         }
 
-        binding.emailTextField.onChange {
-            viewModel.execute(AccountEvents.EmailTextChange(it))
-        }
-
         binding.buttonUpdate.setOnClickListener {
             viewModel.execute(AccountEvents.UpdateUser)
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.state.collectLatest {
+            viewModel.profileState.collectLatest {
                 if(!it.loading && it.error.isBlank()) {
                     binding.success(requireContext())
                     progressDialog.dismiss()

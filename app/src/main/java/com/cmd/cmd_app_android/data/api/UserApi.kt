@@ -26,7 +26,7 @@ interface UserApi {
     suspend fun getUserByEmail(@Path("email") email: String): Response<UserDTO>
 
     @POST("users/loginByEmail/{email}")
-    suspend fun loginUser(@Path("email") email: String, @Body password: String): Response<Boolean>
+    suspend fun loginUser(@Path("email") email: String, @Body password: String): Response<UserDTO>
 
     @POST("users/setPassword/{userId}")
     suspend fun changePassword(@Path("userId") userId: String, @Body newPassword: String): Response<UserDTO>

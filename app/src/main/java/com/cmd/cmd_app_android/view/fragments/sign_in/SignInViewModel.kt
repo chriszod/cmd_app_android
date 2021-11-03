@@ -1,9 +1,7 @@
-package com.cmd.cmd_app_android.viewmodel
+package com.cmd.cmd_app_android.view.fragments.sign_in
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.cmd.cmd_app_android.view.fragments.sign_in.SignInEvents
-import com.cmd.cmd_app_android.view.fragments.sign_in.SignInState
 import com.cmd.cmd_app_android.common.Resource
 import com.cmd.cmd_app_android.data.models.defaultUser
 import com.cmd.cmd_app_android.domain.usecases.auth_use_cases.UserUseCases

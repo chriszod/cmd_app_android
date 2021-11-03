@@ -124,7 +124,7 @@
                     android:fontFamily="@font/poppins_light"
                     android:id="@+id/email_label"/>
 
-                <com.google.android.material.textfield.TextInputEditText
+                <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_text_field"
@@ -132,7 +132,8 @@
                     android:inputType="none"
                     android:textColor="@color/brand_black"
                     android:id="@+id/email_text_field"
-                    android:hint="@null"/>
+                    android:hint="@null"
+                    android:autofillHints="" />
 
                 <TextView
                     android:layout_width="wrap_content"

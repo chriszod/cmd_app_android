@@ -3,15 +3,12 @@ package com.cmd.cmd_app_android.view.fragments.sign_in
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.cmd.cmd_app_android.viewmodel.SignInUiEvents
-import com.cmd.cmd_app_android.viewmodel.SignInViewModel
 import com.cmd.cmd_app_android.data.models.defaultUser
 import com.cmd.cmd_app_android.view.activities.MainActivity
 import com.cmd.cmd_app_android.view.utils.*

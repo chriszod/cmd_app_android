@@ -8,5 +8,4 @@ sealed class AccountEvents {
     data class FirstNameTextChange(val value: String): AccountEvents()
     data class LastNameTextChange(val value: String): AccountEvents()
     data class PhoneNumberChange(val value: String): AccountEvents()
-    data class EmailTextChange(val value: String): AccountEvents()
 }

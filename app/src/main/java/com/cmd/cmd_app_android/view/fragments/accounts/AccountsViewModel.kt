@@ -23,6 +23,9 @@ class AccountsViewModel @Inject constructor(
     private val _state = MutableStateFlow(AccountState())
     val state get() = _state.asStateFlow()
 
+    private val _profileState = MutableStateFlow(AccountState())
+    val profileState get() = _profileState.asStateFlow()
+
     private val _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
 
@@ -40,16 +43,6 @@ class AccountsViewModel @Inject constructor(
                 }
                 is AccountEvents.GetUser -> {
                     getUser()
-                }
-                is AccountEvents.EmailTextChange -> {
-                    val validate = validateEmail(event.value)
-                    _state.value = _state.value.copy(
-                        email = _state.value.email.copy(
-                            value = event.value.trim(),
-                            valid = !validate.error,
-                            errorMessage = validate.message
-                        )
-                    )
                 }
                 is AccountEvents.FirstNameTextChange -> {
                     val validate = validateName(event.value)
@@ -86,7 +79,7 @@ class AccountsViewModel @Inject constructor(
     }
 
     private suspend fun delete() {
-        useCases.deleteUser(state.value.user.id).collectLatest {
+        useCases.deleteUser(state.value.user.id!!).collectLatest {
             when (it) {
                 is Resource.Loading -> {
                     _state.value = _state.value.copy(
@@ -112,29 +105,29 @@ class AccountsViewModel @Inject constructor(
     }
 
     private suspend fun update() {
-        val user = _state.value
+        val data = _state.value
         useCases.updateUser(
-            user.user.copy(
-                email = user.email.value,
-                firstName = user.firstName.value,
-                lastName = user.lastName.value,
-                phone = user.phone.value,
+            data.user.copy(
+                email = data.email.value,
+                firstName = data.firstName.value,
+                lastName = data.lastName.value,
+                phone = data.phone.value,
             )
         ).collectLatest {
             when (it) {
                 is Resource.Loading -> {
-                    _state.value = _state.value.copy(
+                    _profileState.value = profileState.value.copy(
                         loading = true
                     )
                 }
                 is Resource.Error -> {
-                    _state.value = _state.value.copy(
+                    _profileState.value = profileState.value.copy(
                         error = it.error ?: "Unknown Error Occurred",
                         loading = false
                     )
                 }
                 is Resource.Success -> {
-                    _state.value = _state.value.copy(
+                    _profileState.value = profileState.value.copy(
                         error = "",
                         loading = false,
                         user = it.data ?: defaultUser
