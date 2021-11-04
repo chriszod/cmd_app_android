@@ -33,6 +33,9 @@ class UserRepositoryImpl constructor(
             emit(Resource.Loading())
             try {
                 val response = api.loginUser(email, password)
+                if (response.code() == 404) {
+                    emit(Resource.Error<UserDTO>("User not found ${response.message()}"))
+                }
                 if (response.isSuccessful) {
                     response.body()?.let {
                         emit(Resource.Success<UserDTO>(it))
@@ -75,6 +78,9 @@ class UserRepositoryImpl constructor(
                     emit(Resource.Success<UserDTO>(it))
                 }
             }
+            if (response.code() == 404) {
+                emit(Resource.Error<UserDTO>("User not found ${response.message()}"))
+            }
             if (response.isSuccessful) {
                 response.body()?.let {
                     if(it.id == null) {
@@ -115,10 +121,16 @@ class UserRepositoryImpl constructor(
         emit(Resource.Loading())
         try {
             val response = api.getUserById(id)
+            Log.d("TAG", "getUserById: $response")
             if (response.isSuccessful) {
+                Log.d("TAG", "getUserById: $response")
                 response.body()?.let {
                     emit(Resource.Success<UserDTO>(it))
                 }
+            }
+            if (response.code() == 404) {
+                Log.d("TAG", "getUserById: $response")
+                emit(Resource.Error<UserDTO>("User not found ${response.message()}"))
             }
         } catch (e: Exception) {
             emit(Resource.Error<UserDTO>(e.message))
@@ -129,6 +141,9 @@ class UserRepositoryImpl constructor(
         emit(Resource.Loading())
         try {
             val response = api.deleteUser(id)
+            if (response.code() == 404) {
+                emit(Resource.Error<String>("User not found ${response.message()}"))
+            }
             if (response.isSuccessful) {
                 response.body()?.let {
                     emit(Resource.Success<String>(it))
@@ -143,6 +158,9 @@ class UserRepositoryImpl constructor(
         emit(Resource.Loading())
         try {
             val response = api.updateUser(user, user.id!!)
+            if (response.code() == 404) {
+                emit(Resource.Error<UserDTO>("User not found ${response.message()}"))
+            }
             if (response.isSuccessful) {
                 response.body()?.let {
                     Log.d("TAG", "updateUser: $it")
@@ -158,6 +176,9 @@ class UserRepositoryImpl constructor(
         emit(Resource.Loading())
         try {
             val response = api.getUserByEmail(email)
+            if (response.code() == 404) {
+                emit(Resource.Error<UserDTO>("User not found ${response.message()}"))
+            }
             if (response.isSuccessful) {
                 response.body()?.let {
                     emit(Resource.Success<UserDTO>(it))

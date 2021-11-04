@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavArgs
@@ -38,7 +39,7 @@ class ProfileSettingsFragment: BottomSheetDialogFragment() {
 
     private lateinit var progressDialog: AlertDialog
     
-    private val viewModel by viewModels<AccountsViewModel>()
+    val viewModel: AccountsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,7 +56,7 @@ class ProfileSettingsFragment: BottomSheetDialogFragment() {
         _binding = FragmentProfileSettingsBinding.bind(view)
         val user = args.user
         binding.apply {
-            emailTextField.setText(user.email)
+            emailTextField.text = user.email
             phoneTextField.setText(user.phone)
             firstNameTextField.setText(user.firstName)
             lastNameTextField.setText(user.lastName)
@@ -93,11 +94,7 @@ class ProfileSettingsFragment: BottomSheetDialogFragment() {
                 }
                 if (!it.loading && it.error.isNotBlank()){
                     progressDialog.dismiss()
-                    Snackbar.make(view, it.error, LENGTH_LONG).apply {
-                        setAction("Try Again") {
-                            viewModel.execute(AccountEvents.UpdateUser)
-                        }
-                    }.show()
+                    Toast.makeText(requireContext(), "${it.error} try again", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -112,6 +109,17 @@ class ProfileSettingsFragment: BottomSheetDialogFragment() {
                 }
             }
         }
+    }
+
+    private fun makeDialog(title: String, message: String, action: () -> Unit): AlertDialog {
+        return MaterialAlertDialogBuilder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(
+                "Try Again"
+            ) { _, _ -> action() }
+            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+            .create()
     }
 }
 

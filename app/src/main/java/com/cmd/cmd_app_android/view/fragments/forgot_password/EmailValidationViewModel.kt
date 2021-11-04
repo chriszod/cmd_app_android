@@ -57,7 +57,7 @@ class EmailValidationViewModel @Inject constructor(
                             loading = true,
                             user = user,
                         )
-                        useCases.saveUserToDatastore(user.id, user.email, false)
+                        useCases.saveUserToDatastore(user.id!!, user.email!!, false)
                         _uiState.send(UiEvents.EmailValidationSuccess)
 
                     }

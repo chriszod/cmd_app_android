@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -33,7 +34,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModels<AccountsViewModel>()
+    val viewModel: AccountsViewModel by activityViewModels()
     private lateinit var loadingDialog: AlertDialog
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,7 +92,6 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 when (it) {
                     UiEvent.DeletedSuccessfully -> {
                         Intent(requireContext(), StarterActivity::class.java).apply {
-                            putExtra("is_from_main_activity", true)
                             flags =
                                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                         }.also { i ->
@@ -111,7 +111,6 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     }
                     UiEvent.LoggedOutSuccessfully -> {
                         Intent(requireContext(), StarterActivity::class.java).apply {
-                            putExtra("is_from_main_activity", true)
                             flags =
                                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                         }.also { i ->

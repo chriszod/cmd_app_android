@@ -1,5 +1,6 @@
 package com.cmd.cmd_app_android.view.fragments.accounts
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmd.cmd_app_android.common.Resource
@@ -46,7 +47,7 @@ class AccountsViewModel @Inject constructor(
                 }
                 is AccountEvents.FirstNameTextChange -> {
                     val validate = validateName(event.value)
-                    _state.value = _state.value.copy(
+                    _state.value = state.value.copy(
                         firstName = _state.value.firstName.copy(
                             value = event.value.trim(),
                             valid = !validate.error,
@@ -56,8 +57,8 @@ class AccountsViewModel @Inject constructor(
                 }
                 is AccountEvents.LastNameTextChange -> {
                     val validate = validateName(event.value)
-                    _state.value = _state.value.copy(
-                        lastName = _state.value.lastName.copy(
+                    _state.value = state.value.copy(
+                        lastName = state.value.lastName.copy(
                             value = event.value.trim(),
                             valid = !validate.error,
                             errorMessage = validate.message
@@ -66,8 +67,8 @@ class AccountsViewModel @Inject constructor(
                 }
                 is AccountEvents.PhoneNumberChange -> {
                     val validate = validatePhone(event.value)
-                    _state.value = _state.value.copy(
-                        phone = _state.value.phone.copy(
+                    _state.value = state.value.copy(
+                        phone = state.value.phone.copy(
                             value = event.value.trim(),
                             valid = !validate.error,
                             errorMessage = validate.message
@@ -82,18 +83,18 @@ class AccountsViewModel @Inject constructor(
         useCases.deleteUser(state.value.user.id!!).collectLatest {
             when (it) {
                 is Resource.Loading -> {
-                    _state.value = _state.value.copy(
+                    _state.value = state.value.copy(
                         loading = true
                     )
                 }
                 is Resource.Error -> {
-                    _state.value = _state.value.copy(
+                    _state.value = state.value.copy(
                         error = it.error ?: "Unknown Error Occurred",
                         loading = false
                     )
                 }
                 is Resource.Success -> {
-                    _state.value = _state.value.copy(
+                    _state.value = state.value.copy(
                         error = "",
                         loading = false,
                         user = defaultUser
@@ -105,7 +106,8 @@ class AccountsViewModel @Inject constructor(
     }
 
     private suspend fun update() {
-        val data = _state.value
+        Log.d("TAG", "update: ${state.value.user.toString()}")
+        val data = state.value
         useCases.updateUser(
             data.user.copy(
                 email = data.email.value,
@@ -121,6 +123,7 @@ class AccountsViewModel @Inject constructor(
                     )
                 }
                 is Resource.Error -> {
+                    Log.d("TAG", "update: ${it.error}")
                     _profileState.value = profileState.value.copy(
                         error = it.error ?: "Unknown Error Occurred",
                         loading = false
@@ -128,6 +131,11 @@ class AccountsViewModel @Inject constructor(
                 }
                 is Resource.Success -> {
                     _profileState.value = profileState.value.copy(
+                        error = "",
+                        loading = false,
+                        user = it.data ?: defaultUser
+                    )
+                    _state.value = state.value.copy(
                         error = "",
                         loading = false,
                         user = it.data ?: defaultUser
@@ -158,12 +166,12 @@ class AccountsViewModel @Inject constructor(
         useCases.getUserById(userId).collectLatest {
             when(it) {
                 is Resource.Loading -> {
-                    _state.value = _state.value.copy(
+                    _state.value = state.value.copy(
                         loading = true
                     )
                 }
                 is Resource.Error -> {
-                    _state.value = _state.value.copy(
+                    _state.value = state.value.copy(
                         error = it.error ?: "Unknown Error Occurred",
                         loading = false
                     )

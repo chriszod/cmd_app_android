@@ -7,7 +7,7 @@ import com.cmd.cmd_app_android.view.common.TextFieldState
 data class AccountState(
     val user: UserDTO = defaultUser,
     val loading: Boolean = false,
-    val error: String = "jason",
+    val error: String = "",
     val email: TextFieldState = TextFieldState(),
     val firstName: TextFieldState = TextFieldState(),
     val lastName: TextFieldState = TextFieldState(),

@@ -83,7 +83,7 @@ class SignInViewModel @Inject constructor(
                                 loading = false,
                                 user = user
                             )
-                            useCases.saveUserToDatastore(user.id, user.email, user.isEmailVerified)
+                            useCases.saveUserToDatastore(user.id!!, user.email!!, user.isEmailVerified!!)
                         }
                     }
                 }

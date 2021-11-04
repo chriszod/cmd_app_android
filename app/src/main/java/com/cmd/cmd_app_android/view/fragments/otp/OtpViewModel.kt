@@ -84,9 +84,9 @@ class OtpViewModel @Inject constructor(
                         )
                         Log.d("TAG", "verifyOtp: ${it.data.toString()}")
                         useCases.saveUserToDatastore(
-                            userDto.id,
-                            userDto.email,
-                            userDto.isEmailVerified
+                            userDto.id!!,
+                            userDto.email!!,
+                            userDto.isEmailVerified!!
                         )
                         _uiEvents.send(UiEvents.OtpVerifiedSuccessfully)
                     }
