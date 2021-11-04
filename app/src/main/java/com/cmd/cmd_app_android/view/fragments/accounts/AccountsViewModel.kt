@@ -30,6 +30,15 @@ class AccountsViewModel @Inject constructor(
     private val _event = MutableSharedFlow<UiEvent>()
     val event = _event.asSharedFlow()
 
+    private var isFirstLaunch = true
+
+    init {
+        if(isFirstLaunch) {
+            execute(AccountEvents.GetUser)
+            isFirstLaunch = false
+        }
+    }
+
     fun execute(event: AccountEvents) {
         viewModelScope.launch {
             when(event) {

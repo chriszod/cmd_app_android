@@ -40,8 +40,6 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentAccountBinding.bind(view)
 
-        viewModel.execute(AccountEvents.GetUser)
-
         loadingDialog = MaterialAlertDialogBuilder(requireContext())
             .setView(R.layout.layout_loading)
             .setCancelable(false)
