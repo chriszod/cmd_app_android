@@ -5,9 +5,8 @@ import com.cmd.cmd_app_android.common.Resource
 import com.cmd.cmd_app_android.data.api.UserApi
 import com.cmd.cmd_app_android.data.models.UserDTO
 import com.cmd.cmd_app_android.data.models.userDTOtoRequestObject
-import kotlinx.coroutines.InternalCoroutinesApi
+import com.cmd.cmd_app_android.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 
 class UserRepositoryImpl constructor(
@@ -34,9 +33,9 @@ class UserRepositoryImpl constructor(
             try {
                 val response = api.loginUser(email, password)
                 if (response.code() == 404) {
-                    emit(Resource.Error<UserDTO>("User not found ${response.message()}"))
+                    emit(Resource.Error<UserDTO>("User ${response.message()}"))
                 }
-                if (response.isSuccessful) {
+                else if (response.isSuccessful) {
                     response.body()?.let {
                         emit(Resource.Success<UserDTO>(it))
                     }
@@ -81,18 +80,13 @@ class UserRepositoryImpl constructor(
             if (response.code() == 404) {
                 emit(Resource.Error<UserDTO>("User not found ${response.message()}"))
             }
-            if (response.isSuccessful) {
+            else if (response.isSuccessful) {
                 response.body()?.let {
                     if(it.id == null) {
                         emit(Resource.Error<UserDTO>("User Already Exists"))
                     } else {
                         emit(Resource.Success<UserDTO>(it))
                     }
-                }
-            } else if (response.code() == 422) {
-                Log.d("TAG", "createUser: $response")
-                response.body()?.let {
-                    emit(Resource.Success<UserDTO>(it))
                 }
             } else {
                 emit(Resource.Error<UserDTO>(response.message()))
@@ -128,7 +122,7 @@ class UserRepositoryImpl constructor(
                     emit(Resource.Success<UserDTO>(it))
                 }
             }
-            if (response.code() == 404) {
+            else if (response.code() == 404) {
                 Log.d("TAG", "getUserById: $response")
                 emit(Resource.Error<UserDTO>("User not found ${response.message()}"))
             }
@@ -141,15 +135,17 @@ class UserRepositoryImpl constructor(
         emit(Resource.Loading())
         try {
             val response = api.deleteUser(id)
+            Log.d("TAG", "deleteUser: $response")
             if (response.code() == 404) {
-                emit(Resource.Error<String>("User not found ${response.message()}"))
+                emit(Resource.Error<String>("User ${response.message()}"))
             }
-            if (response.isSuccessful) {
+            else if (response.isSuccessful) {
                 response.body()?.let {
                     emit(Resource.Success<String>(it))
                 }
             }
         } catch (e: Exception) {
+            Log.d("TAG", "deleteUser: ${e.message}")
             emit(Resource.Error<String>(e.message))
         }
     }
@@ -159,9 +155,9 @@ class UserRepositoryImpl constructor(
         try {
             val response = api.updateUser(user, user.id!!)
             if (response.code() == 404) {
-                emit(Resource.Error<UserDTO>("User not found ${response.message()}"))
+                emit(Resource.Error<UserDTO>("User ${response.message()}"))
             }
-            if (response.isSuccessful) {
+            else if (response.isSuccessful) {
                 response.body()?.let {
                     Log.d("TAG", "updateUser: $it")
                     emit(Resource.Success<UserDTO>(it))
@@ -177,9 +173,9 @@ class UserRepositoryImpl constructor(
         try {
             val response = api.getUserByEmail(email)
             if (response.code() == 404) {
-                emit(Resource.Error<UserDTO>("User not found ${response.message()}"))
+                emit(Resource.Error<UserDTO>("User ${response.message()}"))
             }
-            if (response.isSuccessful) {
+            else if (response.isSuccessful) {
                 response.body()?.let {
                     emit(Resource.Success<UserDTO>(it))
                 }

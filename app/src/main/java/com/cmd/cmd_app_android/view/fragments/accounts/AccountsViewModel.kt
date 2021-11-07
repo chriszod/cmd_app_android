@@ -108,6 +108,7 @@ class AccountsViewModel @Inject constructor(
                         loading = false,
                         user = defaultUser
                     )
+                    useCases.logoutUser()
                     _event.emit(UiEvent.DeletedSuccessfully)
                 }
             }

@@ -1,4 +1,4 @@
-package com.cmd.cmd_app_android.data.repository
+package com.cmd.cmd_app_android.domain.repository
 
 import com.cmd.cmd_app_android.common.Resource
 import com.cmd.cmd_app_android.data.models.UserDTO

@@ -90,6 +90,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                 when (it) {
                     UiEvent.DeletedSuccessfully -> {
                         Intent(requireContext(), StarterActivity::class.java).apply {
+                            putExtra("is_from_main_activity", true)
                             flags =
                                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                         }.also { i ->
@@ -109,6 +110,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
                     }
                     UiEvent.LoggedOutSuccessfully -> {
                         Intent(requireContext(), StarterActivity::class.java).apply {
+                            putExtra("is_from_main_activity", true)
                             flags =
                                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                         }.also { i ->

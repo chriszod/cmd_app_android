@@ -2,11 +2,12 @@ package com.cmd.cmd_app_android.di
 
 import android.content.Context
 import com.cmd.cmd_app_android.data.api.UserApi
-import com.cmd.cmd_app_android.data.repository.UserRepository
+import com.cmd.cmd_app_android.domain.repository.UserRepository
 import com.cmd.cmd_app_android.data.utils.BASE_URL
 import com.cmd.cmd_app_android.domain.repository.DatastoreRepository
 import com.cmd.cmd_app_android.data.repository.UserRepositoryImpl
 import com.cmd.cmd_app_android.domain.usecases.auth_use_cases.*
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,6 +17,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Singleton
 
 
@@ -33,14 +35,22 @@ object AppModule {
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
+            .addInterceptor {
+                val request = it.request()
+                    .newBuilder()
+                    .addHeader("Content-Type", "application/json")
+                    .build()
+                it.proceed(request)
+            }
             .build()
-
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .addConverterFactory(ScalarsConverterFactory.create()) //important
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
             .create(UserApi::class.java)
+
     }
 
     @Provides

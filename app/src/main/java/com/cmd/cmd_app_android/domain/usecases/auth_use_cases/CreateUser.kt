@@ -2,7 +2,7 @@ package com.cmd.cmd_app_android.domain.usecases.auth_use_cases
 
 import com.cmd.cmd_app_android.common.Resource
 import com.cmd.cmd_app_android.data.models.UserDTO
-import com.cmd.cmd_app_android.data.repository.UserRepository
+import com.cmd.cmd_app_android.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 
 class CreateUser constructor(
