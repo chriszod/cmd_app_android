@@ -63,6 +63,10 @@ class SignInFragment : Fragment(R.layout.fragment_signin) {
             viewModel.execute(SignInEvents.EmailTextChange(it))
         }
 
+        binding.textForgotPassword.setOnClickListener {
+            findNavController().navigate(R.id.action_signInFragment_to_emailValidationFragment)
+        }
+
         binding.passwordTextField.onChange {
             viewModel.execute(SignInEvents.PasswordTextChange(it))
         }

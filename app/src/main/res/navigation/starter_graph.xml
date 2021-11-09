@@ -48,6 +48,13 @@
             app:exitAnim="@anim/exit_anim"
             app:popEnterAnim="@anim/pop_enter_anim"
             app:popExitAnim="@anim/pop_exit_anim"/>
+        <action
+            android:id="@+id/action_signInFragment_to_emailValidationFragment"
+            app:destination="@id/emailValidationFragment"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -90,5 +97,17 @@
         android:id="@+id/passwordFragment"
         android:name="com.cmd.cmd_app_android.view.fragments.password_validation.PasswordFragment"
         android:label="PasswordFragment" />
+    <fragment
+        android:id="@+id/emailValidationFragment"
+        android:name="com.cmd.cmd_app_android.view.fragments.forgot_password.EmailValidationFragment"
+        android:label="EmailValidationFragment" >
+        <action
+            android:id="@+id/action_emailValidationFragment_to_otpFragment"
+            app:destination="@id/otpFragment"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim" />
+    </fragment>
 
 </navigation>
