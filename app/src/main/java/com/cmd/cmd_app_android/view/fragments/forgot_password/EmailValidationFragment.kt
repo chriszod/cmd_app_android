@@ -4,20 +4,25 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.cmd.cmd_app_android.data.models.defaultUser
+import com.cmd.cmd_app_android.view.activities.StarterActivity
+import com.cmd.cmd_app_android.view.utils.gone
 import com.cmd.cmd_app_android.view.utils.handleError
 import com.cmd.cmd_app_android.view.utils.onChange
+import com.cmd.cmd_app_android.view.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import thecmdteam.cmd_app_android.R
 import thecmdteam.cmd_app_android.databinding.FragmentEmailValidationBinding
 
 @AndroidEntryPoint
-class EmailValidationFragment: Fragment(R.layout.fragment_email_validation) {
+class EmailValidationFragment : Fragment(R.layout.fragment_email_validation) {
 
     private val viewModel: EmailValidationViewModel by viewModels()
     private var _binding: FragmentEmailValidationBinding? = null
@@ -34,26 +39,30 @@ class EmailValidationFragment: Fragment(R.layout.fragment_email_validation) {
             viewModel.execute(EmailValidationEvents.ResetPassword)
         }
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect {
-                when(it) {
-                    is UiState.Success -> {
-                        val action = EmailValidationFragmentDirections.actionEmailValidationFragmentToOtpFragment(null)
+                when (it) {
+                    is UiEvents.EmailValidationSuccess -> {
+                        val action =
+                            EmailValidationFragmentDirections.actionEmailValidationFragmentToOtpFragment(
+                                null,
+                                viewModel.emailValidationState.value.user
+                            )
                         findNavController().navigate(action)
                     }
                 }
             }
         }
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.emailValidationState.collect {
                 if (it.loading) {
                     binding.loading(requireContext())
                 }
-                if(it.user != defaultUser && !it.loading){
+                if (it.user != defaultUser && !it.loading) {
                     binding.success(requireContext())
                 }
-                if(it.error.isNotBlank() && !it.loading){
+                if (it.error.isNotBlank() && !it.loading) {
                     binding.error(requireContext())
                 }
                 binding.apply {
@@ -61,6 +70,12 @@ class EmailValidationFragment: Fragment(R.layout.fragment_email_validation) {
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (activity as StarterActivity).window.decorView.systemUiVisibility =
+            (View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
     }
 
     override fun onDestroyView() {
@@ -72,7 +87,8 @@ class EmailValidationFragment: Fragment(R.layout.fragment_email_validation) {
 fun FragmentEmailValidationBinding.loading(context: Context) {
     this.apply {
         buttonResetPassword.isClickable = false
-        buttonResetPassword.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button_loading)
+        buttonResetPassword.background =
+            AppCompatResources.getDrawable(context, R.drawable.background_auth_button_loading)
         resetPasswordText.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
     }
@@ -82,7 +98,8 @@ fun FragmentEmailValidationBinding.loading(context: Context) {
 fun FragmentEmailValidationBinding.success(context: Context) {
     this.apply {
         buttonResetPassword.isClickable = true
-        buttonResetPassword.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
+        buttonResetPassword.background =
+            AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
         resetPasswordText.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
     }
@@ -92,7 +109,8 @@ fun FragmentEmailValidationBinding.success(context: Context) {
 fun FragmentEmailValidationBinding.error(context: Context) {
     this.apply {
         buttonResetPassword.isClickable = true
-        buttonResetPassword.background = AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
+        buttonResetPassword.background =
+            AppCompatResources.getDrawable(context, R.drawable.background_auth_button)
         resetPasswordText.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
     }

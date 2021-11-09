@@ -3,13 +3,13 @@ package com.cmd.cmd_app_android.data.models
 import com.google.gson.annotations.SerializedName
 
 data class UserRequestObject (
-    val email: String,
+    val email: String? = null,
     @SerializedName("fname")
-    val firstName: String,
-    val imageUrl: String,
-    val isEmailVerified: Boolean,
+    val firstName: String? = null,
+    val imageUrl: String? = null,
+    val isEmailVerified: Boolean? = null,
     @SerializedName("lname")
-    val lastName: String,
-    val phone: String,
-    val techTrack: String
+    val lastName: String? = null,
+    val phone: String? = null,
+    val techTrack: String? = null
 )

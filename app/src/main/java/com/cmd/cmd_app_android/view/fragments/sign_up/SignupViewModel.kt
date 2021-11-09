@@ -8,7 +8,7 @@ import com.cmd.cmd_app_android.view.fragments.sign_up.SignupState
 import com.cmd.cmd_app_android.common.Resource
 import com.cmd.cmd_app_android.data.models.UserDTO
 import com.cmd.cmd_app_android.data.models.defaultUser
-import com.cmd.cmd_app_android.domain.usecases.UserUseCases
+import com.cmd.cmd_app_android.domain.usecases.auth_use_cases.UserUseCases
 import com.cmd.cmd_app_android.view.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -112,7 +112,7 @@ class SignupViewModel @Inject constructor(
                                 loading = false,
                                 user = userDto
                             )
-                            useCases.saveUserToDatastore(userDto.id, userDto.email, userDto.isEmailVerified)
+                            useCases.saveUserToDatastore(userDto.id!!, userDto.email!!, userDto.isEmailVerified!!)
                             _uiEvents.send(SignupUiEvents.Success(userDto))
                         }
                     }

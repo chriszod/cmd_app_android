@@ -22,4 +22,21 @@
         android:name="com.cmd.cmd_app_android.view.fragments.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/navigation_account"
+        android:name="com.cmd.cmd_app_android.view.fragments.accounts.AccountFragment"
+        android:label="Account"
+        tools:layout="@layout/fragment_account">
+        <action
+            android:id="@+id/action_navigation_account_to_profileSettingsFragment"
+            app:destination="@id/profileSettingsFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/profileSettingsFragment"
+        android:name="com.cmd.cmd_app_android.view.fragments.accounts.ProfileSettingsFragment"
+        android:label="ProfileSettingsFragment" >
+        <argument
+            android:name="user"
+            app:argType="com.cmd.cmd_app_android.data.models.UserDTO" />
+    </dialog>
 </navigation>

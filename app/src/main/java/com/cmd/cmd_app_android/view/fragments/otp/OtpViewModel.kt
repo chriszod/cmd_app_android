@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmd.cmd_app_android.common.Resource
 import com.cmd.cmd_app_android.data.models.defaultUser
-import com.cmd.cmd_app_android.domain.usecases.UserUseCases
+import com.cmd.cmd_app_android.domain.usecases.auth_use_cases.UserUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -26,12 +26,11 @@ class OtpViewModel @Inject constructor(
     val uiEvents = _uiEvents.receiveAsFlow()
 
     init {
-        execute(OtpEvents.GetUserByID)
     }
 
     fun execute(event: OtpEvents) {
         viewModelScope.launch {
-            when(event) {
+            when (event) {
                 is OtpEvents.ChangeOtpTextField -> {
                     _otpState.value = otpState.value.copy(
                         otp = otpState.value.otp.copy(
@@ -51,77 +50,52 @@ class OtpViewModel @Inject constructor(
                         otpResponse = event.otp
                     )
                 }
-                is OtpEvents.GetUserByID -> {
-                    getUser()
-                }
-            }
-        }
-
-    }
-
-    private suspend fun getUser() {
-        val data = useCases.getUserInfoFromDatastore().first()
-        val id = data["user_id"] as String
-        Log.d("TAG", "getUser: $id")
-        useCases.getUserById(id).collectLatest {
-            when (it) {
-                is Resource.Loading -> {
-                    _otpState.value = otpState.value.copy(loading = true)
-                }
-                is Resource.Error -> {
+                is OtpEvents.PostUser -> {
                     _otpState.value = otpState.value.copy(
-                        loading = false,
-                        error = it.error ?: "Unknown Error Occurred"
-                    )
-                }
-                is Resource.Success -> {
-                    val user = it.data ?: defaultUser
-                    _otpState.value = otpState.value.copy(
-                        loading = false,
-                        user = user
+                        user = event.user
                     )
                 }
             }
         }
+
     }
 
     private suspend fun verifyOtp() {
         val state = otpState.value
-        if(state.otp.value == state.otpResponse) {
-            if(state.user != defaultUser) {
-                Log.d("tag", "verifyOtp: ${state.user.toString()}")
-                val user = state.user.copy(isEmailVerified = true)
-                useCases.updateUser(user).collect {
-                    when (it) {
-                        is Resource.Loading -> {
-                            _otpState.value = otpState.value.copy(loading = true)
-                        }
-                        is Resource.Error -> {
-                            _otpState.value = otpState.value.copy(
-                                loading = false,
-                                error = it.error ?: "Unknown Error Occurred"
-                            )
-                        }
-                        is Resource.Success -> {
-                            val userDto = it.data ?: defaultUser
-                            _otpState.value = otpState.value.copy(
-                                loading = false,
-                                user = userDto
-                            )
-                            Log.d("TAG", "verifyOtp: ${it.data.toString()}")
-                            useCases.saveUserToDatastore(userDto.id, userDto.email, userDto.isEmailVerified)
-                            _uiEvents.send(UiEvents.OtpVerifiedSuccessfully)
-                        }
+        if (state.otp.value == state.otpResponse) {
+            Log.d("tag", "verifyOtp: ${state.user.toString()}")
+            val user = state.user.copy(isEmailVerified = true)
+            useCases.updateUser(user).collect {
+                when (it) {
+                    is Resource.Loading -> {
+                        _otpState.value = otpState.value.copy(loading = true)
+                    }
+                    is Resource.Error -> {
+                        _otpState.value = otpState.value.copy(
+                            loading = false,
+                            error = it.error ?: "Unknown Error Occurred"
+                        )
+                    }
+                    is Resource.Success -> {
+                        val userDto = it.data ?: defaultUser
+                        _otpState.value = otpState.value.copy(
+                            loading = false,
+                            user = userDto
+                        )
+                        Log.d("TAG", "verifyOtp: ${it.data.toString()}")
+                        useCases.saveUserToDatastore(
+                            userDto.id!!,
+                            userDto.email!!,
+                            userDto.isEmailVerified!!
+                        )
+                        _uiEvents.send(UiEvents.OtpVerifiedSuccessfully)
                     }
                 }
-            } else {
-                getUser()
             }
         } else {
             _otpState.value = state.copy(
                 otp = state.otp.copy(valid = false, errorMessage = "Wrong Otp")
             )
-            _uiEvents.send(UiEvents.WrongOtp)
         }
     }
 
@@ -130,18 +104,15 @@ class OtpViewModel @Inject constructor(
         useCases.verifyEmail(userInfo["email"] as String).collectLatest {
             when (it) {
                 is Resource.Loading -> {
-                    _otpState.value = otpState.value.copy(loading = true)
+                    _uiEvents.send(UiEvents.GettingOtp)
                 }
                 is Resource.Error -> {
-                    _otpState.value = otpState.value.copy(
-                        loading = false,
-                        error = it.error ?: "Unknown Error Occurred"
-                    )
+                    _uiEvents.send(UiEvents.OtpError)
                 }
                 is Resource.Success -> {
+                    _uiEvents.send(UiEvents.OtpSuccess)
                     val otp = it.data ?: ""
                     _otpState.value = otpState.value.copy(
-                        loading = false,
                         otpResponse = otp
                     )
                 }
@@ -152,6 +123,8 @@ class OtpViewModel @Inject constructor(
 }
 
 sealed class UiEvents {
-    object WrongOtp: UiEvents()
-    object OtpVerifiedSuccessfully: UiEvents()
+    object OtpVerifiedSuccessfully : UiEvents()
+    object GettingOtp : UiEvents()
+    object OtpError : UiEvents()
+    object OtpSuccess : UiEvents()
 }

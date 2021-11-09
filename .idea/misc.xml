@@ -4,16 +4,26 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Lordsolid/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/activity_main.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/drawable/background_account_item.xml" value="0.21944444444444444" />
         <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/drawable/background_auth_button.xml" value="0.18425925925925926" />
+        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/drawable/background_update_account.xml" value="0.2203125" />
+        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/drawable/bg_full_screen_loading.xml" value="0.2203125" />
+        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/drawable/icon_home.xml" value="0.15648148148148147" />
         <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/font/poppins_bold.xml" value="0.1265625" />
-        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/activity_main.xml" value="0.153125" />
+        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/activity_main.xml" value="0.18" />
+        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/activity_starter.xml" value="0.1" />
+        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/fragment_account.xml" value="0.22" />
         <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/fragment_dashboard.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/fragment_email_validation.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/fragment_onboarding.xml" value="0.2675925925925926" />
-        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/fragment_otp.xml" value="0.5" />
+        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/fragment_otp.xml" value="0.22" />
         <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/fragment_password.xml" value="0.33" />
+        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/fragment_profile_settings.xml" value="0.25" />
         <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/fragment_signin.xml" value="0.33" />
         <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/fragment_signup.xml" value="0.33" />
+        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/layout_full_loading_screen.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/layout/layout_loading.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/User/Documents/Projects/AndroidStudioProjects/cmd_app_android/app/src/main/res/menu/bottom_nav_menu.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/chris/AndroidStudioProjects/cmd_appp_android/app/src/main/res/layout/activity_main.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/chris/AndroidStudioProjects/cmd_appp_android/app/src/main/res/layout/activity_starter.xml" value="0.264" />
         <entry key="..\:/Users/chris/AndroidStudioProjects/cmd_appp_android/app/src/main/res/layout/activity_test.xml" value="0.23645833333333333" />

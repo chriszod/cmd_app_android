@@ -36,6 +36,9 @@
             app:enterAnim="@anim/enter_anim"
             app:exitAnim="@anim/exit_anim"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_splashFragment_to_emailValidationFragment"
+            app:destination="@id/emailValidationFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -91,6 +94,10 @@
         <argument
             android:name="otp"
             app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="user"
+            app:argType="com.cmd.cmd_app_android.data.models.UserDTO"
             app:nullable="true" />
     </fragment>
     <fragment

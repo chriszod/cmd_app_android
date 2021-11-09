@@ -21,5 +21,13 @@ class StarterActivity:AppCompatActivity() {
 
         val navhostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navhostFragment.navController
+        val navGraph = navController.navInflater.inflate(R.navigation.starter_graph)
+        val isFromMainActivity = intent.getBooleanExtra("is_from_main_activity", false)
+        if(isFromMainActivity) {
+            navGraph.startDestination = R.id.signInFragment
+        } else {
+            navGraph.startDestination = R.id.splashFragment
+        }
+        navController.graph = navGraph
     }
 }
